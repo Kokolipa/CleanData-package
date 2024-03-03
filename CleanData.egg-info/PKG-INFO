@@ -1,0 +1,18 @@
+Metadata-Version: 2.1
+Name: CleanData
+Version: 0.0.10
+Summary: A comprehensive and scalable Python Library for daily cleansing operations.
+Home-page: https://github.com/Kokolipa/CleanData-package/tree/CleanData_main
+Author: Kokolipa
+Author-email: galbeeri1@gmail.com
+License: MIT
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3.10.13
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.10
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: numpy>=1.23.5
+Requires-Dist: scikit-learn==1.2.2
+Requires-Dist: pyod==1.1.2
+Requires-Dist: spellchecker==0.8.0

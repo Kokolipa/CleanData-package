@@ -1,14 +1,13 @@
 from setuptools import find_packages, setup
 
-with open("app/README.md", "r") as f:
+with open("README.md", "r") as f:
     long_description = f.read()
 
 setup(
     name="CleanData",
     version="0.0.10",
     description="A comprehensive and scalable Python Library for daily cleansing operations.",
-    package_dir={"": "CleanData"},
-    packages=find_packages(where="CleanData"),
+    packages=find_packages(),
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/Kokolipa/CleanData-package/tree/CleanData_main", 
