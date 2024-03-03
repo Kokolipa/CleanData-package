@@ -115,15 +115,20 @@ class TreatNA:
     #* (6) Method
     @classmethod
     def logistic_regression_MAR_identifier(cls,df: pd.DataFrame, max_iter=1000) -> pd.DataFrame:
-        """_summary_
+        """Identify Missing at Random (MAR) cases using Logistic Regression.
+
+        This method aims to detect Missing at Random (MAR) instances within a dataset, where the occurrence of missing values systematically relates to observed data. It employs logistic regression to identify columns with missing values and returns the largest coefficients associated with each feature.
 
         Args:
-            df (pd.DataFrame): _description_
-            max_iter (int, optional): _description_. Defaults to 1000.
+            df (pd.DataFrame): Input Pandas DataFrame containing data with missing values.
+            max_iter (int, optional): Maximum number of iterations for logistic regression convergence. Defaults to 1000.
 
         Returns:
-            pd.DataFrame: _description_
-        """        
+            pd.DataFrame: DataFrame containing information about the largest coefficients of features obtained from logistic regression.
+            
+        Raises:
+            ValueError: If fitting the logistic regression model encounters an issue.
+        """    
         # Identify columns containing NA/NaN values
         columns_with_na = df.columns[df.isna().any()].tolist()
 
