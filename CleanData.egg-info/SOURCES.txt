@@ -5,6 +5,7 @@ CleanData/__init__.py
 CleanData/anomalies.py
 CleanData/find_treat_duplicates.py
 CleanData/memory.py
+CleanData/qa.py
 CleanData/text_typos.py
 CleanData/treat_na.py
 CleanData.egg-info/PKG-INFO
