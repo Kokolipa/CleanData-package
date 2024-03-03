@@ -19,9 +19,10 @@ setup(
         "Programming Language :: Python :: 3.10.13",
         "Operating System :: OS Independent",
     ],
-    install_requires=["numpy >= 1.23.5",
-                      "scikit-learn==1.2.2",
-                      "pyod==1.1.2",
-                      "spellchecker==0.8.0"], 
+    install_requires=[
+        "numpy>=1.23.5",
+        "scikit-learn==1.2.2",
+        "pyod==1.1.2",
+        "pyspellchecker >= 0.8.1"],  
     python_requires=">=3.10",
 )

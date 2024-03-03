@@ -15,4 +15,4 @@ License-File: LICENSE
 Requires-Dist: numpy>=1.23.5
 Requires-Dist: scikit-learn==1.2.2
 Requires-Dist: pyod==1.1.2
-Requires-Dist: spellchecker==0.8.0
+Requires-Dist: pyspellchecker>=0.8.1
