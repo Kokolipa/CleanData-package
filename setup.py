@@ -11,7 +11,7 @@ setup(
     packages=find_packages(where="CleanData"),
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/ArjanCodes/2023-package", #TODO: Create the GitHub repor
+    url="https://github.com/Kokolipa/CleanData-package/tree/CleanData_main", 
     author="Kokolipa",
     author_email="galbeeri1@gmail.com",
     license="MIT", 
