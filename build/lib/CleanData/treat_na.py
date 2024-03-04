@@ -20,6 +20,14 @@ class TreatNA:
     #* (1) Method 
     @classmethod
     def IdentifyNAs(cls, data: pd.DataFrame) -> pd.DataFrame:
+        """Identify rows containing missing values in a DataFrame.
+
+        Args:
+            data (pd.DataFrame): Input DataFrame to search for missing values.
+
+        Returns:
+            pd.DataFrame: DataFrame containing rows with missing values.
+        """       
         missing_values = [np.nan, 'missing', 'null', '', 'empty']
         # Find rows containing any of the missing values
         mask = data.apply(lambda row: any(str(val) in missing_values for val in row), axis=1)
@@ -32,6 +40,15 @@ class TreatNA:
     #* (2) Method
     @classmethod
     def complete_case_na(cls, data: pd.DataFrame) -> pd.DataFrame:
+        """
+        Filter DataFrame to retain rows with complete case or edge case missing values.
+
+        Args:
+            data (pd.DataFrame): Input DataFrame containing potentially incomplete rows.
+
+        Returns:
+            pd.DataFrame: DataFrame with rows containing complete case or edge case missing values.
+        """     
         # Include edge cases
         missing_values = ['missing', 'null', '', 'empty']
 
@@ -45,6 +62,14 @@ class TreatNA:
     #* (3) Method 
     @classmethod
     def drop_complete_case_na(cls, data: pd.DataFrame) -> pd.DataFrame:
+        """Drop rows with complete case missing values from a DataFrame.
+
+        Args:
+            data (pd.DataFrame): Input DataFrame containing potentially incomplete rows.
+
+        Returns:
+            pd.DataFrame: DataFrame with complete case rows retained.
+        """    
         # Identify rows to drop and return the corresponding index value
         missing_values = ['missing', 'null', '', 'empty']
         rows_to_drop = data[data.apply(lambda row: any(pd.isna(val) or str(val) in missing_values for val in row), axis=1)].index

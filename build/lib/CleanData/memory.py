@@ -13,6 +13,16 @@ class Memory:
     #* (1) Method 
     @classmethod
     def optimise_mem(cls, data: pd.DataFrame, verbose=True) -> pd.DataFrame:
+        """
+        Optimize memory usage of a DataFrame.
+
+        Args:
+            data (pd.DataFrame): Input DataFrame to be optimized.
+            verbose (bool, optional): Whether to display memory reduction information. Defaults to True.
+
+        Returns:
+            pd.DataFrame: Optimized DataFrame with reduced memory usage.
+        """      
         # Create a function to optimise the memory
         start_mem = data.memory_usage().sum() / 1024 ** 2
         numerics = ["int8", "int16", "int32", "int64", "float16", "float32", "float64"]

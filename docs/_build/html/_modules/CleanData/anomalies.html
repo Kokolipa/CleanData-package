@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html class="no-js" lang="Python">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+        <title>CleanData.anomalies &mdash; CleanData Documentation 1.0.0 documentation</title>
+    
+    <link rel="stylesheet" type="text/css" href="../../_static/dist/fontawesome.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/dist/theme.css" />
+            <link rel="index" title="Index" href="../../genindex.html" />
+            <link rel="search" title="Search" href="../../search.html" />
+            <link rel="top" title="CleanData Documentation 1.0.0 documentation" href="#" />
+            <link rel="up" title="Module code" href="../index.html" />
+    </head>
+<body>
+    <script type="text/javascript" src="../../_static/dist/blocking.js"></script>
+    <header class="container-fluid bg-primary">
+        <a class="btn btn-sm btn-light skip-to-content-link" href="#main">Skip to content</a>
+        <div class="container-fluid">
+            <div class="navbar navbar-expand-lg navbar-dark font-weight-bold">
+                    <a href="../../index.html"
+                        title="Wagtail"
+                        class="logo navbar-brand"
+                    >
+                        <img src="../../_static/img/wagtail-logo-new.svg" width="45" height="59" alt="Wagtail"
+                            class="logo-img"
+                        />
+                        Sphinx Wagtail Theme
+                    </a>
+                
+                
+                <button class="navbar-toggler btn btn-primary d-lg-none" type="button" data-toggle="collapse" data-target="#collapseSidebar" aria-expanded="false" aria-controls="collapseExample">
+                    <span class="navbar-toggler-icon"></span>
+                    <span class="sr-only">menu</span>
+                </button>
+            </div>
+        </div>
+    </header>
+    <div class="container-fluid">
+        <div class="row">
+            <aside class="col-12 col-lg-3 sidebar-container">
+                <div id="collapseSidebar" class="collapse sticky-top d-lg-block pt-5 pr-lg-4">
+<div id="searchbox" class="searchbox mb-6 px-1" role="search">
+    <form id="search-form" action="../../search.html" autocomplete="off" method="get" role="search">
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <div class="input-group-text border-right-0 bg-white py-3 pl-3 pr-2"><span class="fas fa-search"></span></div>
+            </div>
+            <input class="form-control py-3 pr-3 pl-1 h-100 border-left-0" type="search" name="q" placeholder="Search documentation" aria-label="Search documentation" id="searchinput" />
+        </div>
+        <input type="hidden" name="check_keywords" value="yes" />
+        <input type="hidden" name="area" value="default" />
+    </form>
+</div><div class="site-toc">
+    <nav class="toc mt-3" aria-label="Main menu">
+        <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">CleanData-package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../CleanData.html">CleanData package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../setup.html">setup module</a></li>
+</ul>
+</li>
+</ul>
+
+    </nav>
+    <template data-toggle-item-template>
+        <button class="btn btn-sm btn-link toctree-expand" type="button">
+            <span class="sr-only">Toggle menu contents</span>
+        </button>
+    </template>
+</div>
+                    <div class="d-lg-none border-bottom">
+                        
+                    </div>
+                </div>
+            </aside>
+            <div class="col-12 col-lg-9 pt-5">
+                <header class="row align-items-baseline">
+                    <div class="col">
+                        <nav aria-label="breadcrumb">
+    <ol class="breadcrumb m-0 p-0 bg-transparent">
+        <li class="breadcrumb-item"><a href="../../index.html">Docs</a></li>
+            <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+        <li class="breadcrumb-item active" aria-current="page">CleanData.anomalies</li>
+    </ol>
+</nav>
+                    </div>
+                    <div class="col-sm-12 col-lg-auto mt-3 mt-lg-3">
+                        <noscript>
+                            <p>JavaScript is required to toggle light/dark mode..</p>
+                        </noscript>
+                        <button id="wagtail-theme" class="btn btn-sm btn-light text-decoration-none" type="button">
+                            <span class="dark-only"><i class="fas fa-sun"></i> Light mode</span>
+                            <span class="light-only"><i class="fas fa-moon"></i> Dark mode</span>
+                        </button>
+    <a class="btn btn-sm btn-light text-decoration-none" href="https://github.com/wagtail/sphinx_wagtail_theme/blob/main/docs/_modules/CleanData/anomalies" rel="nofollow">
+        <span class="btn-icon"><span class="fab fa-github"></span></span>
+        <span class="btn-text">Edit on GitHub</span>
+    </a>
+                        
+                    </div>
+                </header>
+                <div class="row" >
+                    <div class="col-12">
+                        <hr class="w-100 my-4">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12 col-lg-9 order-last order-lg-first rst-content">
+                        <main role="main" id="main">
+    <h1>Source code for CleanData.anomalies</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Import Dependencies</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">pyod.models.cd</span> <span class="kn">import</span> <span class="n">CD</span>
+<span class="kn">from</span> <span class="nn">pyod.utils.data</span> <span class="kn">import</span> <span class="n">get_outliers_inliers</span>
+<span class="kn">from</span> <span class="nn">sklearn.neighbors</span> <span class="kn">import</span> <span class="n">LocalOutlierFactor</span>
+
+<span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="n">action</span><span class="o">=</span><span class="s1">&#39;ignore&#39;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="ne">FutureWarning</span><span class="p">)</span>
+
+
+
+<span class="c1">#!############################# # Find &amp; Treat Anomalies # ##############################</span>
+    <span class="c1">#FIXME: finalise Anomalies class -&gt; Create a function to find categorical Anomalies with value_counts(normalise=True). </span>
+
+<div class="viewcode-block" id="Anomalies"><a class="viewcode-back" href="../../CleanData.html#CleanData.anomalies.Anomalies">[docs]</a><span class="k">class</span> <span class="nc">Anomalies</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">data</span>
+
+    
+    <span class="c1">#* (1) Method</span>
+<div class="viewcode-block" id="Anomalies.find_date_anomalies"><a class="viewcode-back" href="../../CleanData.html#CleanData.anomalies.Anomalies.find_date_anomalies">[docs]</a>    <span class="nd">@classmethod</span> <span class="c1"># class method for date anomalies</span>
+    <span class="k">def</span> <span class="nf">find_date_anomalies</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">date_column</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">identify_by</span><span class="o">=</span><span class="s1">&#39;month&#39;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Find anomalies in date data.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            data (pd.DataFrame): DataFrame containing date information.</span>
+<span class="sd">            date_column (str): Name of the column containing date data.</span>
+<span class="sd">            identify_by (str, optional): Identifier for type of anomaly to find (&#39;month&#39; or &#39;year&#39;). Defaults to &#39;month&#39;.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            pd.DataFrame: DataFrame containing anomalies based on specified identification criteria.</span>
+<span class="sd">        &quot;&quot;&quot;</span>   
+
+        <span class="k">if</span> <span class="n">identify_by</span> <span class="o">==</span> <span class="s1">&#39;month&#39;</span><span class="p">:</span>
+            <span class="n">data</span><span class="p">[</span><span class="s1">&#39;year&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">date_column</span><span class="p">]</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">year</span>
+            <span class="n">data</span><span class="p">[</span><span class="s1">&#39;month&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">date_column</span><span class="p">]</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">month</span>
+            <span class="n">eval_data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s1">&#39;year&#39;</span><span class="p">,</span> <span class="s1">&#39;month&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">size</span><span class="p">()</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;days_count&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">eval_data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">eval_data</span><span class="p">[</span><span class="s1">&#39;days_count&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">28</span><span class="p">]</span>
+        
+        <span class="k">elif</span> <span class="n">identify_by</span> <span class="o">==</span> <span class="s1">&#39;year&#39;</span><span class="p">:</span>
+            <span class="c1"># Create year &amp; month features</span>
+            <span class="n">data</span><span class="p">[</span><span class="s1">&#39;month&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">date_column</span><span class="p">]</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">month</span>
+            <span class="n">data</span><span class="p">[</span><span class="s1">&#39;year&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">date_column</span><span class="p">]</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">year</span>
+            <span class="n">eval_data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s1">&#39;year&#39;</span><span class="p">,</span> <span class="s1">&#39;month&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">size</span><span class="p">()</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;days_count&quot;</span><span class="p">)</span>
+            <span class="n">year_count</span> <span class="o">=</span> <span class="n">eval_data</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;year&#39;</span><span class="p">)[</span><span class="s1">&#39;days_count&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+            <span class="n">year_missing</span> <span class="o">=</span> <span class="n">year_count</span><span class="p">[</span><span class="n">year_count</span><span class="p">[</span><span class="s1">&#39;days_count&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">365</span><span class="p">]</span>
+
+            <span class="c1"># Print statements for missing days in each year</span>
+            <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">year_missing</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+                <span class="n">missing_days</span> <span class="o">=</span> <span class="mi">365</span> <span class="o">-</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;days_count&#39;</span><span class="p">]</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Year </span><span class="si">{</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;year&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> is missing </span><span class="si">{</span><span class="n">missing_days</span><span class="si">}</span><span class="s2"> days (</span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">missing_days</span><span class="o">/</span><span class="mi">30</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="si">}</span><span class="s2"> month/s)&quot;</span><span class="p">)</span></div>
+    
+    
+    
+    
+    
+    
+    
+    <span class="c1">#* (2) Method</span>
+<div class="viewcode-block" id="Anomalies.nonlinear_outliers_influencers_knn"><a class="viewcode-back" href="../../CleanData.html#CleanData.anomalies.Anomalies.nonlinear_outliers_influencers_knn">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">nonlinear_outliers_influencers_knn</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">features</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">neighbors_fraction</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">,</span> <span class="n">contamination</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">,</span> <span class="n">center_measure</span><span class="o">=</span><span class="s1">&#39;mean&#39;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Detects outliers in a dataset based on nonlinear methods and KNN.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            data (pd.DataFrame): The dataset to analyze.</span>
+<span class="sd">            features (list): List of features to consider for outlier detection.</span>
+<span class="sd">            neighbors_fraction (float, optional): Fraction of dataset size to use as neighbors. Defaults to 0.1.</span>
+<span class="sd">            contamination (str, optional): Method for calculating contamination (&#39;auto&#39;, &#39;3std&#39;). Defaults to &#39;auto&#39;.</span>
+<span class="sd">            center_measure (str, optional): Central distribution measure to use (&#39;mean&#39; or &#39;median&#39;). Defaults to &#39;mean&#39;.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            pd.DataFrame: DataFrame of outliers.</span>
+<span class="sd">        &quot;&quot;&quot;</span>    
+        
+        <span class="k">if</span> <span class="n">contamination</span> <span class="o">==</span> <span class="s1">&#39;auto&#39;</span><span class="p">:</span> 
+            <span class="c1"># Start the timer</span>
+            <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+            
+            <span class="c1"># Calculate the number of neighbors based on a fraction of the dataset size</span>
+            <span class="n">n_neighbors</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">*</span> <span class="n">neighbors_fraction</span><span class="p">))</span>
+
+            <span class="c1"># Use Local Outlier Factor for outlier detection (contamination auto = 0.1)</span>
+            <span class="n">clf</span> <span class="o">=</span> <span class="n">LocalOutlierFactor</span><span class="p">(</span><span class="n">n_neighbors</span><span class="o">=</span><span class="n">n_neighbors</span><span class="p">,</span> <span class="n">contamination</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">)</span>
+            <span class="n">X</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">features</span><span class="p">]</span>
+            <span class="c1"># Fit the model and predict outliers (-1 for outliers, 1 for inliers)</span>
+            <span class="n">y_pred</span> <span class="o">=</span> <span class="n">clf</span><span class="o">.</span><span class="n">fit_predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+            
+            <span class="c1"># Filter outliers</span>
+            <span class="n">X</span><span class="p">[</span><span class="s1">&#39;outlier&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">y_pred</span>
+            <span class="n">outliers</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="n">X</span><span class="p">[</span><span class="s1">&#39;outlier&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+            
+            <span class="c1"># End the timer</span>
+            <span class="n">end_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+            <span class="c1"># Calculate the elapsed time</span>
+            <span class="n">elapsed_time</span> <span class="o">=</span> <span class="n">end_time</span> <span class="o">-</span> <span class="n">start_time</span>
+            
+            <span class="c1"># Convert elapsed time to milliseconds</span>
+            <span class="n">elapsed_time_ms</span> <span class="o">=</span> <span class="n">elapsed_time</span> <span class="o">*</span> <span class="mi">1000</span>
+
+            <span class="c1"># Print the elapsed time in milliseconds</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Elapsed time:&quot;</span><span class="p">,</span> <span class="n">elapsed_time_ms</span><span class="p">,</span> <span class="s2">&quot;milliseconds&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;n_nighbors:&quot;</span><span class="p">,</span> <span class="n">n_neighbors</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">outliers</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s1">&#39;outlier&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        
+        <span class="k">elif</span> <span class="n">contamination</span> <span class="o">==</span> <span class="s1">&#39;3std&#39;</span><span class="p">:</span>
+            <span class="c1"># Start the timer</span>
+            <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+            
+            <span class="c1"># Calculate the mean and standard deviation of features</span>
+            <span class="k">if</span> <span class="n">center_measure</span> <span class="o">==</span> <span class="s1">&#39;mean&#39;</span><span class="p">:</span>
+                <span class="n">centers</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">features</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">values</span>
+                <span class="n">spreads</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">features</span><span class="p">]</span><span class="o">.</span><span class="n">std</span><span class="p">()</span><span class="o">.</span><span class="n">values</span>
+            <span class="k">elif</span> <span class="n">center_measure</span> <span class="o">==</span> <span class="s1">&#39;median&#39;</span><span class="p">:</span>
+                <span class="n">centers</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">features</span><span class="p">]</span><span class="o">.</span><span class="n">median</span><span class="p">()</span><span class="o">.</span><span class="n">values</span>
+                <span class="n">spreads</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">features</span><span class="p">]</span><span class="o">.</span><span class="n">std</span><span class="p">()</span><span class="o">.</span><span class="n">values</span>  
+                    
+            <span class="c1"># Calculate contamination -&gt; return 3 STD from the mean +/-</span>
+            <span class="n">contamination_values</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">spread</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">spreads</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">center_measure</span> <span class="o">==</span> <span class="s1">&#39;mean&#39;</span><span class="p">:</span>
+                    <span class="n">outlier_mask</span> <span class="o">=</span> <span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">centers</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">spread</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">centers</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">spread</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="n">center_measure</span> <span class="o">==</span> <span class="s1">&#39;median&#39;</span><span class="p">:</span>
+                    <span class="n">outlier_mask</span> <span class="o">=</span> <span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">centers</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">spread</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">centers</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">spread</span><span class="p">)</span>
+                <span class="n">contamination_values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">outlier_mask</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+                    
+            <span class="c1"># Return contamination</span>
+            <span class="n">contamination</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">contamination_values</span><span class="p">)</span>
+            
+            <span class="c1"># Calculate the number of neighbors based on a fraction of the dataset size</span>
+            <span class="n">n_neighbors</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">*</span> <span class="n">neighbors_fraction</span><span class="p">))</span>
+
+            <span class="c1"># Use Local Outlier Factor for outlier detection (contamination auto = 3 STD away from the mean +/-) </span>
+            <span class="n">clf</span> <span class="o">=</span> <span class="n">LocalOutlierFactor</span><span class="p">(</span><span class="n">n_neighbors</span><span class="o">=</span><span class="n">n_neighbors</span><span class="p">,</span> <span class="n">contamination</span><span class="o">=</span><span class="n">contamination</span><span class="p">)</span>
+            <span class="n">X</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">features</span><span class="p">]</span>
+            <span class="c1"># Fit the model and predict outliers (-1 for outliers, 1 for inliers)</span>
+            <span class="n">y_pred</span> <span class="o">=</span> <span class="n">clf</span><span class="o">.</span><span class="n">fit_predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+            
+            <span class="c1"># Filter outliers</span>
+            <span class="n">X</span><span class="p">[</span><span class="s1">&#39;outlier&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">y_pred</span>
+            <span class="n">outliers</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="n">X</span><span class="p">[</span><span class="s1">&#39;outlier&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+            
+            <span class="c1"># End the timer</span>
+            <span class="n">end_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+            <span class="c1"># Calculate the elapsed time</span>
+            <span class="n">elapsed_time</span> <span class="o">=</span> <span class="n">end_time</span> <span class="o">-</span> <span class="n">start_time</span>
+            
+            <span class="c1"># Convert elapsed time to milliseconds</span>
+            <span class="n">elapsed_time_ms</span> <span class="o">=</span> <span class="n">elapsed_time</span> <span class="o">*</span> <span class="mi">1000</span>
+
+            <span class="c1"># Print the elapsed time in milliseconds</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Elapsed time:&quot;</span><span class="p">,</span> <span class="n">elapsed_time_ms</span><span class="p">,</span> <span class="s2">&quot;milliseconds&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;n_nighbors:&quot;</span><span class="p">,</span> <span class="n">n_neighbors</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">outliers</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s1">&#39;outlier&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid value for contamination. Please provide &#39;auto&#39; or &#39;3std&#39;.&quot;</span><span class="p">)</span></div>
+
+    
+    
+    
+    
+    
+    
+    
+    <span class="c1">#* (3) Method</span>
+<div class="viewcode-block" id="Anomalies.linear_outliers_influencers"><a class="viewcode-back" href="../../CleanData.html#CleanData.anomalies.Anomalies.linear_outliers_influencers">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">linear_outliers_influencers</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span><span class="n">data</span><span class="p">:</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span> <span class="p">,</span><span class="n">features</span><span class="p">:</span><span class="nb">list</span><span class="p">,</span> <span class="n">center_measure</span><span class="o">=</span><span class="s1">&#39;mean&#39;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;This function align for linear datasets to explore outliers using Cook&#39;s D (distance based evaluation). A Cook’s result &gt; 1 = Significant influence, while Cook’s D &gt; 0.5 is worth investigating. </span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            data (pd.DataFrame): The dataset to analyze.</span>
+<span class="sd">            features (list): List of features to consider for outlier detection.</span>
+<span class="sd">            center_measure (str, optional): Central distribution measure to use (&#39;mean&#39; or &#39;median&#39;). Defaults to &#39;mean&#39;.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            pd.DataFrame: DataFrame of outliers.</span>
+<span class="sd">        &quot;&quot;&quot;</span>            
+        
+        <span class="c1"># Calculate the mean and standard deviation of features</span>
+        <span class="k">if</span> <span class="n">center_measure</span> <span class="o">==</span> <span class="s1">&#39;mean&#39;</span><span class="p">:</span>
+            <span class="n">centers</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">features</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">values</span>
+            <span class="n">spreads</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">features</span><span class="p">]</span><span class="o">.</span><span class="n">std</span><span class="p">()</span><span class="o">.</span><span class="n">values</span>
+        <span class="k">elif</span> <span class="n">center_measure</span> <span class="o">==</span> <span class="s1">&#39;median&#39;</span><span class="p">:</span>
+            <span class="n">centers</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">features</span><span class="p">]</span><span class="o">.</span><span class="n">median</span><span class="p">()</span><span class="o">.</span><span class="n">values</span>
+            <span class="n">spreads</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">features</span><span class="p">]</span><span class="o">.</span><span class="n">std</span><span class="p">()</span><span class="o">.</span><span class="n">values</span>  
+                    
+        <span class="c1"># Calculate contamination -&gt; return 3 STD from the mean +/-</span>
+        <span class="n">contamination_values</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">spread</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">spreads</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">center_measure</span> <span class="o">==</span> <span class="s1">&#39;mean&#39;</span><span class="p">:</span>
+                <span class="n">outlier_mask</span> <span class="o">=</span> <span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">centers</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">spread</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">centers</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">spread</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">center_measure</span> <span class="o">==</span> <span class="s1">&#39;median&#39;</span><span class="p">:</span>
+                <span class="n">outlier_mask</span> <span class="o">=</span> <span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">centers</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">spread</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">centers</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">spread</span><span class="p">)</span>
+            <span class="n">contamination_values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">outlier_mask</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+                    
+        <span class="c1"># Return contamination</span>
+        <span class="n">contamination</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">contamination_values</span><span class="p">)</span>
+
+        <span class="c1"># Splitting to X &amp; Y columns</span>
+        <span class="n">X</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">features</span><span class="p">]</span>
+
+        <span class="c1"># Instantiate the Cook&#39;s D evaluator</span>
+        <span class="n">cooks_D</span> <span class="o">=</span> <span class="n">CD</span><span class="p">(</span><span class="n">contamination</span><span class="o">=</span><span class="n">contamination</span><span class="p">)</span>
+        <span class="c1"># predict outliers</span>
+        <span class="n">cooks_D</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+        <span class="c1"># predict outliers &amp; inliners (bool array = 1/0)</span>
+        <span class="n">pred</span> <span class="o">=</span> <span class="n">cooks_D</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">return_confidence</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="c1"># We have to transpose the dataset to match the dataset</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">pred</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="s2">&quot;predictions&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span> <span class="s2">&quot;confidence&quot;</span><span class="p">})</span>
+
+        <span class="n">X_array</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span> <span class="c1"># Transforming to numpy array to leverage get_outliers_inliers</span>
+        <span class="n">y_array</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;predictions&quot;</span><span class="p">]</span>   
+            
+        <span class="c1"># Extracting inliners and outliers</span>
+        <span class="n">X_outliers</span><span class="p">,</span> <span class="n">X_inliners</span> <span class="o">=</span> <span class="n">get_outliers_inliers</span><span class="p">(</span><span class="n">X_array</span><span class="p">,</span> <span class="n">y_array</span><span class="p">)</span>
+
+        <span class="c1"># Result outliers</span>
+        <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">X_outliers</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">X</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span></div></div>
+</pre></div>
+</main>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer class="container-fluid bg-primary text-light">
+        <div class="container">
+            <div class="row">
+        <div class="col p-4">
+            
+                <nav aria-label="Footer">
+                    <ul class="nav justify-content-center mb-2">
+                        
+                            
+                            
+                            <li class="nav-item"><a class="nav-link text-light"  href="https://wagtail.org/features/">Features</a></li>
+                        
+                            
+                            
+                            <li class="nav-item"><a class="nav-link text-light"  href="https://wagtail.org/about-wagtail/"> About Wagtail</a></li>
+                        
+                            
+                            
+                            <li class="nav-item"><a class="nav-link text-light"  href="https://wagtail.org/services/"> Services</a></li>
+                        
+                            
+                            
+                            <li class="nav-item"><a class="nav-link text-light"  href="https://wagtail.org/blog/"> Blog</a></li>
+                        
+                            
+                            
+                            <li class="nav-item"><a class="nav-link text-light"  href="https://wagtail.org/packages/"> Packages</a></li>
+                        
+                            
+                            
+                            <li class="nav-item"><a class="nav-link text-light"  href="https://wagtail.org/developers/"> Developers</a></li>
+                        
+                    </ul>
+                </nav>
+            
+            <div class="text-center">
+                <p style="display: none">
+                    <a class="text-light" href="https://github.com/wagtail/sphinx_wagtail_theme" rel="nofollow" target="_blank">
+                        Wagtail Sphinx Theme 6.3.0
+                    </a>
+                </p>
+            </div>
+            <div class="text-center">
+                    &copy; Copyright 2024, Gal Beeri
+            </div>
+        </div>
+    </div>
+        </div>
+    </footer>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/dist/theme.js"></script>
+        <script type="text/javascript" src="../../_static/dist/vendor.js"></script>
+        <script type="text/javascript" src="../../_static/searchtools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script type="text/javascript">
+            document.addEventListener('DOMContentLoaded', function() { Search.loadIndex("../../searchindex.js"); });
+        </script>
+        <script type="text/javascript" id="searchindexloader"></script>
+    </body>
+</html>

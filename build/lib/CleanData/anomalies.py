@@ -23,16 +23,16 @@ class Anomalies:
     #* (1) Method
     @classmethod # class method for date anomalies
     def find_date_anomalies(cls, data:pd.DataFrame, date_column: str, identify_by='month'):
-        """_summary_
+        """Find anomalies in date data.
 
         Args:
-            data (pd.DataFrame): _description_
-            date_column (str): _description_
-            identify_by (str, optional): _description_. Defaults to 'month'.
+            data (pd.DataFrame): DataFrame containing date information.
+            date_column (str): Name of the column containing date data.
+            identify_by (str, optional): Identifier for type of anomaly to find ('month' or 'year'). Defaults to 'month'.
 
         Returns:
-            _type_: _description_
-        """            
+            pd.DataFrame: DataFrame containing anomalies based on specified identification criteria.
+        """   
 
         if identify_by == 'month':
             data['year'] = data[date_column].dt.year
