@@ -23,6 +23,8 @@ setup(
         "numpy>=1.23.5",
         "scikit-learn==1.2.2",
         "pyod==1.1.2",
-        "pyspellchecker >= 0.8.1"],  
+        "pyspellchecker >= 0.8.1",
+        "transformers >= 4.38.2",
+        "pytorch >= 2.2.1"],  
     python_requires=">=3.10",
 )
