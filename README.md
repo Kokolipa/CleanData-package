@@ -1,7 +1,7 @@
 # CleanData
 -----------------
 
-# pandas: powerful Python data analysis toolkit
+##  CleanData: Powerful Python data preprocessing library with scientific approach
 Insert clickable quick links here 
 
 
