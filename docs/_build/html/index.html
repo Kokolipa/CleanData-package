@@ -6,7 +6,7 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     
-        <title>Welcome to CleanData Documentation&#39;s documentation! &mdash; CleanData Documentation 1.0.0 documentation</title>
+        <title>Welcome to CleanData Documentation! &mdash; CleanData Documentation 1.0.0 documentation</title>
     
     <link rel="stylesheet" type="text/css" href="_static/dist/fontawesome.css" />
       <link rel="stylesheet" type="text/css" href="_static/dist/theme.css" />
@@ -60,7 +60,6 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="modules.html">CleanData-package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="CleanData.html">CleanData package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="setup.html">setup module</a></li>
 </ul>
 </li>
 </ul>
@@ -83,7 +82,7 @@
                         <nav aria-label="breadcrumb">
     <ol class="breadcrumb m-0 p-0 bg-transparent">
         <li class="breadcrumb-item"><a href="#">Docs</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Welcome to CleanData Documentation's documentation!</li>
+        <li class="breadcrumb-item active" aria-current="page">Welcome to CleanData Documentation!</li>
     </ol>
 </nav>
                     </div>
@@ -114,18 +113,65 @@
                 <div class="row">
                     <div class="col-12 col-lg-9 order-last order-lg-first rst-content">
                         <main role="main" id="main">
-    <section id="welcome-to-cleandata-documentation-s-documentation">
-<h1>Welcome to CleanData Documentation's documentation!<a class="headerlink" href="#welcome-to-cleandata-documentation-s-documentation" title="Permalink to this heading">¶</a></h1>
+    <section id="welcome-to-cleandata-documentation">
+<h1>Welcome to CleanData Documentation!<a class="headerlink" href="#welcome-to-cleandata-documentation" title="Permalink to this heading">¶</a></h1>
+<p><strong>Cleandata</strong> is an easy to use Python library for data cleansing operations
+with the main focus on reducing the steps required on each sub-process included in the data pre-processing step:</p>
+<ul class="simple">
+<li><p>Reducing memory consumption for dataset with decreased byte sizes.</p></li>
+<li><p>Considering MAR, MCAR, and MNAR cases to treat case-specific NA values.</p></li>
+<li><p>Treating and dropping duplicated values.</p></li>
+<li><p>Using scientific methods to treat anomalies.</p></li>
+<li><p>Treating text typos.</p></li>
+<li><p>Using AI state-of-the-art models for Table Question Answering purposes.</p></li>
+</ul>
+<p>Visit the <a class="reference external" href="https://github.com/Kokolipa/CleanData-package/tree/CleanData_main">GitHub reponsitory</a> for more information.</p>
+<section id="library-requirements">
+<h2>Library Requirements:<a class="headerlink" href="#library-requirements" title="Permalink to this heading">¶</a></h2>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Library</strong></p></th>
+<th class="head"><p><strong>Version</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>NumPy</p></td>
+<td><p>&gt;=1.23.5</p></td>
+</tr>
+<tr class="row-odd"><td><p>scikit-learn</p></td>
+<td><p>==1.2.2</p></td>
+</tr>
+<tr class="row-even"><td><p>pyod</p></td>
+<td><p>==1.1.2</p></td>
+</tr>
+<tr class="row-odd"><td><p>pyspellchecker</p></td>
+<td><p>&gt;=0.8.1</p></td>
+</tr>
+<tr class="row-even"><td><p>transformers</p></td>
+<td><p>&gt;=4.38.2</p></td>
+</tr>
+<tr class="row-odd"><td><p>pytorch</p></td>
+<td><p>&gt;=2.2.1</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this heading">¶</a></h2>
+<p>To use CleanData, first install it using pip:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp gp-VirtualEnv">(.venv)</span> <span class="gp">$ </span>pip<span class="w"> </span>install<span class="w"> </span>CleanData
+</pre></div>
+</div>
 <div class="toctree-wrapper compound">
 <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="modules.html">CleanData-package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="CleanData.html">CleanData package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="setup.html">setup module</a></li>
 </ul>
 </li>
 </ul>
 </div>
+</section>
 </section>
 <section id="indices-and-tables">
 <h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this heading">¶</a></h1>
@@ -148,7 +194,11 @@
                         <div class="sticky-top toc page-toc" aria-labelledby="page-toc-heading">
                             <p class="font-weight-bold" id="page-toc-heading">Page contents</p>
                             <ul>
-<li><a class="reference internal" href="#">Welcome to CleanData Documentation's documentation!</a></li>
+<li><a class="reference internal" href="#">Welcome to CleanData Documentation!</a><ul>
+<li><a class="reference internal" href="#library-requirements">Library Requirements:</a></li>
+<li><a class="reference internal" href="#installation">Installation</a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
 </ul>
 

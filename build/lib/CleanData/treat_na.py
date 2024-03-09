@@ -22,11 +22,27 @@ class TreatNA:
     def IdentifyNAs(cls, data: pd.DataFrame) -> pd.DataFrame:
         """Identify rows containing missing values in a DataFrame.
 
-        Args:
-            data (pd.DataFrame): Input DataFrame to search for missing values.
+        Parameters:
+            - data (pd.DataFrame): Input DataFrame to search for missing values.
 
         Returns:
             pd.DataFrame: DataFrame containing rows with missing values.
+        
+        Example usage:
+        --------------
+        .. code-block:: python
+
+            import pandas as pd
+            import CleanData
+
+            # Create a sample DataFrame
+            data = pd.DataFrame({
+                'Column1': [1, 2, pd.NA, 4, 5],
+                'Column2': ['apple', 'banana', 'null', 'orange', ''],
+                'Column3': ['cat', 'dog', 'missing', '', 'empty']
+            })
+
+            CleanData.TreatNA.IdentifyNAs(data)
         """       
         missing_values = [np.nan, 'missing', 'null', '', 'empty']
         # Find rows containing any of the missing values
@@ -43,11 +59,32 @@ class TreatNA:
         """
         Filter DataFrame to retain rows with complete case or edge case missing values.
 
-        Args:
-            data (pd.DataFrame): Input DataFrame containing potentially incomplete rows.
+        Parameters:
+            - data (pd.DataFrame): Input DataFrame containing potentially incomplete rows.
 
         Returns:
             pd.DataFrame: DataFrame with rows containing complete case or edge case missing values.
+        
+        Example usage:
+        --------------
+
+        .. code-block:: python
+
+            # Import Dependencies
+            import CleanData
+            import numpy as np
+            import pandas as pd
+
+            # Creating a DataFrame
+            data = pd.DataFrame({
+                'A': [1, 'missing', np.nan, 4, 5],
+                'B': ['apple', 'banana', 'null', 'orange', ''],
+                'C': ['cat', 'dog', 'elephant', '', 'empty']
+            })
+
+            # Explore complete case na instances
+            CleanData.TreatNA.complete_case_na(data)
+
         """     
         # Include edge cases
         missing_values = ['missing', 'null', '', 'empty']
@@ -62,14 +99,50 @@ class TreatNA:
     #* (3) Method 
     @classmethod
     def drop_complete_case_na(cls, data: pd.DataFrame) -> pd.DataFrame:
-        """Drop rows with complete case missing values from a DataFrame.
+        """
+        Drop rows with complete case missing values from a DataFrame.
 
-        Args:
-            data (pd.DataFrame): Input DataFrame containing potentially incomplete rows.
+        Parameters:
+            - data : pd.DataFrame Input DataFrame containing potentially incomplete rows.
 
-        Returns:
-            pd.DataFrame: DataFrame with complete case rows retained.
-        """    
+        Returns: 
+            pd.DataFrame with complete case rows retained.
+
+        Example Usage:
+        ---------------
+
+        .. code-block:: python
+
+            # Import Dependencies
+            import CleanData
+            import numpy as np
+            import pandas as pd
+
+            # Sample data
+            data = {
+                'Column1': np.random.randint(0, 100, 50),
+                'Column2': np.random.choice(['A', 'B', 'C'], 50),
+                'Column3': np.random.rand(50)
+            }
+
+            # Convert to DataFrame
+            df = pd.DataFrame(data)
+
+            # Set 10 random rows to NA
+            rows_to_nan = np.random.choice(df.index, 10, replace=False)
+            df.loc[rows_to_nan, :] = np.nan
+
+            # Add full records with specified values
+            missing_values = ['missing', 'null', '', 'empty']
+            for value in missing_values:
+                df.loc[len(df)] = [value] * len(df.columns)
+
+            # Drop rows with complete cases containing missing values
+            cleaned_data = CleanData.TreatNA.drop_complete_case_na(df)
+
+            print(cleaned_data)
+
+        """
         # Identify rows to drop and return the corresponding index value
         missing_values = ['missing', 'null', '', 'empty']
         rows_to_drop = data[data.apply(lambda row: any(pd.isna(val) or str(val) in missing_values for val in row), axis=1)].index
@@ -87,7 +160,7 @@ class TreatNA:
     def DataImpute(cls, data: pd.DataFrame, features: list, missing_values=np.nan, numeric_strategy='mean', string_strategy='constant', string_fill_value=None):
         """Apply univariate data imputation for numerical & categorical strategies. Suitable for MCAR cases (A variable is missing completely at random (MCAR) if the probability of being missing is the same for all the observations)
 
-        Args:
+        Parameters:
             - data (pd.DataFrame)
             - features (list)
             - missing_values (the placeholder for the missing values): **Defaults to np.nan;  Can also be pd.NA, int, float,  or str. 
@@ -97,7 +170,31 @@ class TreatNA:
 
         Returns:
             _type_: pd.DataFrame
-        """            
+
+        Example usage: 
+        --------------
+        .. code-block:: python
+
+            # Import Dependencies
+            import pandas as pd
+            import numpy as np
+            import CleanData
+
+            # Create sample DataFrame
+            data = pd.DataFrame({
+                'A': [1, np.nan, 3, 4, 5],
+                'B': [' apple', ' banana', np.nan, 'orange', ''],
+                'C': ['cat', 'dog', 'elephant', np.nan, ''],
+            })
+
+            # Create a list containing the features to impute the data 
+            features = ['A', 'B', 'C']
+
+            # Apply Data Impute on the dataset -> here's how you can impute data both for numeric and categorical features
+            CleanData.TreatNA.DataImpute(data, features, numeric_strategy='mean', string_strategy='constant', string_fill_value='unknown')
+
+        """     
+
         imputed_data = data.copy()
         numeric_features = list(data.select_dtypes(include=np.number).columns)
         string_features = list(data.select_dtypes(include=object).columns)
@@ -124,11 +221,35 @@ class TreatNA:
         """Missing of values is not at random (MNAR) if their being missing depends on information not recorded in the dataset. Transaction dataset = the values are missing if if we don't have transaction_number (NOTE: here we could have more the one independent variable)
         NOTE: **Independent = transaction_number; **dependent (in their occurance): the rest of the variables
 
-        Args:
-            data (_type_): pd.DataFrame / np.array (2d array)
+        Parameters:
+            - data (_type_): pd.DataFrame / np.array (2d array)
 
         Returns:
             pd.DataFrame: This function will drop all corresponsing NA values from the dependent variables based on the Independent variable/s
+        
+        Example Usage:
+        --------------
+
+        .. code-block:: python
+
+            # Import Dependencies
+            import CleanData
+            import numpy as np
+            import pandas as pd
+
+            # Sample data
+            df = pd.DataFrame({
+                "CID": np.arange(1, 20),
+                "transaction_number": np.linspace(0, 1, 19),
+                "Column3": [np.nan for _ in range(1, 20)],
+                "Column4": [np.nan for _ in range(1, 20)]
+            })
+            df["transaction_number"].iloc[:5] = np.nan
+            df["Column3"].iloc[5:] = df["CID"].mean()
+            df["Column4"].iloc[5:] = df["CID"].mean()
+
+            df
+            CleanData.TreatNA.MNAR(df, ["transaction_number", "Column3", "Column4"])
         """            
         return data.loc[:, features].dropna()
     
@@ -144,15 +265,42 @@ class TreatNA:
 
         This method aims to detect Missing at Random (MAR) instances within a dataset, where the occurrence of missing values systematically relates to observed data. It employs logistic regression to identify columns with missing values and returns the largest coefficients associated with each feature.
 
-        Args:
-            df (pd.DataFrame): Input Pandas DataFrame containing data with missing values.
-            max_iter (int, optional): Maximum number of iterations for logistic regression convergence. Defaults to 1000.
+        Parameters:
+            - df (pd.DataFrame): Input Pandas DataFrame containing data with missing values.
+            - max_iter (int, optional): Maximum number of iterations for logistic regression convergence. Defaults to 1000.
 
         Returns:
             pd.DataFrame: DataFrame containing information about the largest coefficients of features obtained from logistic regression.
             
         Raises:
             ValueError: If fitting the logistic regression model encounters an issue.
+        
+        Example usage:
+        --------------
+        .. code-block:: python
+            
+            # Import dependencies
+            import pandas as pd
+            import numpy as np
+            import CleanData
+            
+            # Sample Data Creation
+            np.random.seed(42)  # For reproducible results
+            data = {
+                'Age': np.random.randint(20, 60, 100),
+                'Income': np.random.randint(5000, 20000, 100),
+                'Gender': np.random.choice(['Male', 'Female'], 100),
+                'Has_Car': np.random.choice([0, 1], 100)
+            }
+
+            # Create the DataFrame
+            df = pd.DataFrame(data)
+
+            # Create a MAR case 
+            df.loc[df["Gender"] == "Male", "Has_Car"] = np.nan
+
+            @ Leverage the logistic regression MAR identifier
+            CleanData.TreatNA.logistic_regression_MAR_identifier(df).sort_values(by="Coefficient", ascending=False)
         """    
         # Identify columns containing NA/NaN values
         columns_with_na = df.columns[df.isna().any()].tolist()

@@ -58,7 +58,6 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../modules.html">CleanData-package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../CleanData.html">CleanData package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../setup.html">setup module</a></li>
 </ul>
 </li>
 </ul>
@@ -144,6 +143,66 @@
 
 <span class="sd">        Returns:</span>
 <span class="sd">            pd.DataFrame: DataFrame containing anomalies based on specified identification criteria.</span>
+<span class="sd">        </span>
+<span class="sd">        Example usage:</span>
+<span class="sd">        --------------</span>
+<span class="sd">        .. code-block:: python</span>
+<span class="sd">            </span>
+<span class="sd">            # Import dependencies</span>
+<span class="sd">            import pandas as pd</span>
+<span class="sd">            import numpy as np</span>
+<span class="sd">            from datetime import timedelta, date</span>
+<span class="sd">            import CleanData</span>
+
+<span class="sd">            # Function to generate daily dates except for anomalies</span>
+<span class="sd">            def create_date_dataset(start_date, end_date, anomaly_month_year, missing_months_year):</span>
+<span class="sd">                current_date = start_date</span>
+<span class="sd">                dates = []</span>
+
+<span class="sd">                while current_date &lt;= end_date:</span>
+<span class="sd">                    current_month_year = (current_date.month, current_date.year)</span>
+
+<span class="sd">                    # Skip dates for the anomaly month (less than 28 days)</span>
+<span class="sd">                    if current_month_year == anomaly_month_year:</span>
+<span class="sd">                        if len(dates) % 29 != 0:  # Ensuring this month has fewer than 28 records</span>
+<span class="sd">                            dates.append(current_date)</span>
+<span class="sd">                        current_date += timedelta(days=2)  # Skipping days to ensure less than 28 records</span>
+<span class="sd">                    # Skip entire months for the missing months in the specified year</span>
+<span class="sd">                    elif current_month_year[1] == missing_months_year and current_month_year[0] in [2, 3]:</span>
+<span class="sd">                        current_date += timedelta(days=1)  # Move to the next day to check for month increment</span>
+<span class="sd">                        if current_date.month in [2, 3]:  # If still in the missing month, skip to next month</span>
+<span class="sd">                            continue</span>
+<span class="sd">                    else:</span>
+<span class="sd">                        dates.append(current_date)</span>
+<span class="sd">                        current_date += timedelta(days=1)</span>
+
+<span class="sd">                return dates</span>
+
+<span class="sd">                # Define the start and end dates for the dataset</span>
+<span class="sd">                start_date = date(2022, 1, 1)</span>
+<span class="sd">                end_date = date(2023, 12, 31)</span>
+
+<span class="sd">                # Specify the anomaly month/year and the year with missing months</span>
+<span class="sd">                anomaly_month_year = (4, 2022)  # April 2022 will have less than 28 records</span>
+<span class="sd">                missing_months_year = 2023  # February and March 2023 will be missing</span>
+
+<span class="sd">                # Generate the dataset</span>
+<span class="sd">                dates = create_date_dataset(start_date, end_date, anomaly_month_year, missing_months_year)</span>
+
+<span class="sd">                # Create a DataFrame</span>
+<span class="sd">                df = pd.DataFrame(dates, columns=[&#39;Date&#39;])</span>
+
+<span class="sd">                # Display the first few rows of the DataFrame to confirm</span>
+<span class="sd">                df[&#39;Date&#39;] = pd.to_datetime(df[&#39;Date&#39;], errors=&#39;coerce&#39;, infer_datetime_format=True)</span>
+
+<span class="sd">                df[&#39;month&#39;] = df[&#39;Date&#39;].dt.month</span>
+<span class="sd">                df[&#39;year&#39;] = df[&#39;Date&#39;].dt.year</span>
+<span class="sd">                test = df.groupby([&#39;year&#39;,&#39;month&#39;]).size().reset_index(name=&quot;days_count&quot;)</span>
+
+<span class="sd">                year_count = test.groupby(&#39;year&#39;)[&quot;days_count&quot;].sum()</span>
+
+<span class="sd">                CleanData.anomalies.Anomalies.find_date_anomalies(df, date_column=&#39;Date&#39;, identify_by=&#39;month&#39;)</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>   
 
         <span class="k">if</span> <span class="n">identify_by</span> <span class="o">==</span> <span class="s1">&#39;month&#39;</span><span class="p">:</span>
@@ -185,6 +244,38 @@
 
 <span class="sd">        Returns:</span>
 <span class="sd">            pd.DataFrame: DataFrame of outliers.</span>
+<span class="sd">        </span>
+<span class="sd">        Example usage:</span>
+<span class="sd">        --------------</span>
+<span class="sd">        .. code-block:: python</span>
+<span class="sd">        </span>
+<span class="sd">            # Note: The application of this function is similar to the linear outliers function</span>
+
+<span class="sd">            # Import dependencies</span>
+<span class="sd">            import numpy as np</span>
+<span class="sd">            import pandas as pd</span>
+<span class="sd">            import CleanData</span>
+
+
+<span class="sd">            # Set random seed for reproducibility</span>
+<span class="sd">            np.random.seed(42)</span>
+
+<span class="sd">            # Generate a fake dataset with 100 samples and 3 features</span>
+<span class="sd">            n_samples = 1000</span>
+<span class="sd">            n_features = 5</span>
+
+<span class="sd">            # Generate random data for the features</span>
+<span class="sd">            X = np.random.rand(n_samples, n_features)</span>
+
+<span class="sd">            # Generate random outliers by adding noise to the data</span>
+<span class="sd">            outliers_indices = np.random.choice(n_samples, 5, replace=False)  # Select 5 random indices as outliers</span>
+<span class="sd">            X[outliers_indices] += 10  # Add noise to create outliers</span>
+
+<span class="sd">            # Create Dataframe</span>
+<span class="sd">            df = pd.DataFrame(X, columns=[&#39;Column&#39; + &#39; &#39; + str(i) for i in range(1, n_features+1, 1)])</span>
+
+<span class="sd">            # Identify outliers influencers from your dataset</span>
+<span class="sd">            CleanData.anomalies.Anomalies.nonlinear_outliers_influencers_knn(df, df.columns.to_list())</span>
 <span class="sd">        &quot;&quot;&quot;</span>    
         
         <span class="k">if</span> <span class="n">contamination</span> <span class="o">==</span> <span class="s1">&#39;auto&#39;</span><span class="p">:</span> 
@@ -288,6 +379,36 @@
 
 <span class="sd">        Returns:</span>
 <span class="sd">            pd.DataFrame: DataFrame of outliers.</span>
+<span class="sd">        </span>
+<span class="sd">        Example usage:</span>
+<span class="sd">        --------------</span>
+<span class="sd">        .. code-block:: python</span>
+
+<span class="sd">            # Import dependencies</span>
+<span class="sd">            import numpy as np</span>
+<span class="sd">            import pandas as pd</span>
+<span class="sd">            import CleanData</span>
+
+
+<span class="sd">            # Set random seed for reproducibility</span>
+<span class="sd">            np.random.seed(42)</span>
+
+<span class="sd">            # Generate a fake dataset with 100 samples and 3 features</span>
+<span class="sd">            n_samples = 1000</span>
+<span class="sd">            n_features = 5</span>
+
+<span class="sd">            # Generate random data for the features</span>
+<span class="sd">            X = np.random.rand(n_samples, n_features)</span>
+
+<span class="sd">            # Generate random outliers by adding noise to the data</span>
+<span class="sd">            outliers_indices = np.random.choice(n_samples, 5, replace=False)  # Select 5 random indices as outliers</span>
+<span class="sd">            X[outliers_indices] += 10  # Add noise to create outliers</span>
+
+<span class="sd">            # Create Dataframe</span>
+<span class="sd">            df = pd.DataFrame(X, columns=[&#39;Column&#39; + &#39; &#39; + str(i) for i in range(1, n_features+1, 1)])</span>
+
+<span class="sd">            # Identify outliers influencers from your dataset</span>
+<span class="sd">            CleanData.anomalies.Anomalies.linear_outliers_influencers(df, df.columns.to_list())</span>
 <span class="sd">        &quot;&quot;&quot;</span>            
         
         <span class="c1"># Calculate the mean and standard deviation of features</span>

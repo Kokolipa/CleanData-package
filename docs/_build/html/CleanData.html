@@ -14,7 +14,6 @@
             <link rel="search" title="Search" href="search.html" />
             <link rel="top" title="CleanData Documentation 1.0.0 documentation" href="#" />
             <link rel="up" title="CleanData-package" href="modules.html" />
-            <link rel="next" title="setup module" href="setup.html" />
             <link rel="prev" title="CleanData-package" href="modules.html" />
     </head>
 <body>
@@ -62,7 +61,6 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="modules.html">CleanData-package</a><ul class="current">
 <li class="toctree-l2 current"><a class="current reference internal" href="#">CleanData package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="setup.html">setup module</a></li>
 </ul>
 </li>
 </ul>
@@ -140,6 +138,62 @@ identify_by (str, optional): Identifier for type of anomaly to find ('month' or 
 <dt>Returns:</dt><dd><p>pd.DataFrame: DataFrame containing anomalies based on specified identification criteria.</p>
 </dd>
 </dl>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import dependencies</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">timedelta</span><span class="p">,</span> <span class="n">date</span>
+<span class="kn">import</span> <span class="nn">CleanData</span>
+
+<span class="c1"># Function to generate daily dates except for anomalies</span>
+<span class="k">def</span> <span class="nf">create_date_dataset</span><span class="p">(</span><span class="n">start_date</span><span class="p">,</span> <span class="n">end_date</span><span class="p">,</span> <span class="n">anomaly_month_year</span><span class="p">,</span> <span class="n">missing_months_year</span><span class="p">):</span>
+    <span class="n">current_date</span> <span class="o">=</span> <span class="n">start_date</span>
+    <span class="n">dates</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">while</span> <span class="n">current_date</span> <span class="o">&lt;=</span> <span class="n">end_date</span><span class="p">:</span>
+        <span class="n">current_month_year</span> <span class="o">=</span> <span class="p">(</span><span class="n">current_date</span><span class="o">.</span><span class="n">month</span><span class="p">,</span> <span class="n">current_date</span><span class="o">.</span><span class="n">year</span><span class="p">)</span>
+
+        <span class="c1"># Skip dates for the anomaly month (less than 28 days)</span>
+        <span class="k">if</span> <span class="n">current_month_year</span> <span class="o">==</span> <span class="n">anomaly_month_year</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">dates</span><span class="p">)</span> <span class="o">%</span> <span class="mi">29</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>  <span class="c1"># Ensuring this month has fewer than 28 records</span>
+                <span class="n">dates</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">current_date</span><span class="p">)</span>
+            <span class="n">current_date</span> <span class="o">+=</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>  <span class="c1"># Skipping days to ensure less than 28 records</span>
+        <span class="c1"># Skip entire months for the missing months in the specified year</span>
+        <span class="k">elif</span> <span class="n">current_month_year</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">missing_months_year</span> <span class="ow">and</span> <span class="n">current_month_year</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]:</span>
+            <span class="n">current_date</span> <span class="o">+=</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># Move to the next day to check for month increment</span>
+            <span class="k">if</span> <span class="n">current_date</span><span class="o">.</span><span class="n">month</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]:</span>  <span class="c1"># If still in the missing month, skip to next month</span>
+                <span class="k">continue</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">dates</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">current_date</span><span class="p">)</span>
+            <span class="n">current_date</span> <span class="o">+=</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">dates</span>
+
+    <span class="c1"># Define the start and end dates for the dataset</span>
+    <span class="n">start_date</span> <span class="o">=</span> <span class="n">date</span><span class="p">(</span><span class="mi">2022</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">end_date</span> <span class="o">=</span> <span class="n">date</span><span class="p">(</span><span class="mi">2023</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">31</span><span class="p">)</span>
+
+    <span class="c1"># Specify the anomaly month/year and the year with missing months</span>
+    <span class="n">anomaly_month_year</span> <span class="o">=</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">2022</span><span class="p">)</span>  <span class="c1"># April 2022 will have less than 28 records</span>
+    <span class="n">missing_months_year</span> <span class="o">=</span> <span class="mi">2023</span>  <span class="c1"># February and March 2023 will be missing</span>
+
+    <span class="c1"># Generate the dataset</span>
+    <span class="n">dates</span> <span class="o">=</span> <span class="n">create_date_dataset</span><span class="p">(</span><span class="n">start_date</span><span class="p">,</span> <span class="n">end_date</span><span class="p">,</span> <span class="n">anomaly_month_year</span><span class="p">,</span> <span class="n">missing_months_year</span><span class="p">)</span>
+
+    <span class="c1"># Create a DataFrame</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">dates</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Date&#39;</span><span class="p">])</span>
+
+    <span class="c1"># Display the first few rows of the DataFrame to confirm</span>
+    <span class="n">df</span><span class="p">[</span><span class="s1">&#39;Date&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;Date&#39;</span><span class="p">],</span> <span class="n">errors</span><span class="o">=</span><span class="s1">&#39;coerce&#39;</span><span class="p">,</span> <span class="n">infer_datetime_format</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">df</span><span class="p">[</span><span class="s1">&#39;month&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;Date&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">month</span>
+    <span class="n">df</span><span class="p">[</span><span class="s1">&#39;year&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;Date&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">year</span>
+    <span class="n">test</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s1">&#39;year&#39;</span><span class="p">,</span><span class="s1">&#39;month&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">size</span><span class="p">()</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;days_count&quot;</span><span class="p">)</span>
+
+    <span class="n">year_count</span> <span class="o">=</span> <span class="n">test</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;year&#39;</span><span class="p">)[</span><span class="s2">&quot;days_count&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+
+    <span class="n">CleanData</span><span class="o">.</span><span class="n">anomalies</span><span class="o">.</span><span class="n">Anomalies</span><span class="o">.</span><span class="n">find_date_anomalies</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">date_column</span><span class="o">=</span><span class="s1">&#39;Date&#39;</span><span class="p">,</span> <span class="n">identify_by</span><span class="o">=</span><span class="s1">&#39;month&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py method">
@@ -154,6 +208,33 @@ center_measure (str, optional): Central distribution measure to use ('mean' or '
 <dt>Returns:</dt><dd><p>pd.DataFrame: DataFrame of outliers.</p>
 </dd>
 </dl>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import dependencies</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">CleanData</span>
+
+
+<span class="c1"># Set random seed for reproducibility</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+
+<span class="c1"># Generate a fake dataset with 100 samples and 3 features</span>
+<span class="n">n_samples</span> <span class="o">=</span> <span class="mi">1000</span>
+<span class="n">n_features</span> <span class="o">=</span> <span class="mi">5</span>
+
+<span class="c1"># Generate random data for the features</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">n_samples</span><span class="p">,</span> <span class="n">n_features</span><span class="p">)</span>
+
+<span class="c1"># Generate random outliers by adding noise to the data</span>
+<span class="n">outliers_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">n_samples</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>  <span class="c1"># Select 5 random indices as outliers</span>
+<span class="n">X</span><span class="p">[</span><span class="n">outliers_indices</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">10</span>  <span class="c1"># Add noise to create outliers</span>
+
+<span class="c1"># Create Dataframe</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Column&#39;</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_features</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)])</span>
+
+<span class="c1"># Identify outliers influencers from your dataset</span>
+<span class="n">CleanData</span><span class="o">.</span><span class="n">anomalies</span><span class="o">.</span><span class="n">Anomalies</span><span class="o">.</span><span class="n">linear_outliers_influencers</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">to_list</span><span class="p">())</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py method">
@@ -170,6 +251,35 @@ center_measure (str, optional): Central distribution measure to use ('mean' or '
 <dt>Returns:</dt><dd><p>pd.DataFrame: DataFrame of outliers.</p>
 </dd>
 </dl>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Note: The application of this function is similar to the linear outliers function</span>
+
+<span class="c1"># Import dependencies</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">CleanData</span>
+
+
+<span class="c1"># Set random seed for reproducibility</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+
+<span class="c1"># Generate a fake dataset with 100 samples and 3 features</span>
+<span class="n">n_samples</span> <span class="o">=</span> <span class="mi">1000</span>
+<span class="n">n_features</span> <span class="o">=</span> <span class="mi">5</span>
+
+<span class="c1"># Generate random data for the features</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">n_samples</span><span class="p">,</span> <span class="n">n_features</span><span class="p">)</span>
+
+<span class="c1"># Generate random outliers by adding noise to the data</span>
+<span class="n">outliers_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">n_samples</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>  <span class="c1"># Select 5 random indices as outliers</span>
+<span class="n">X</span><span class="p">[</span><span class="n">outliers_indices</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">10</span>  <span class="c1"># Add noise to create outliers</span>
+
+<span class="c1"># Create Dataframe</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Column&#39;</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_features</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)])</span>
+
+<span class="c1"># Identify outliers influencers from your dataset</span>
+<span class="n">CleanData</span><span class="o">.</span><span class="n">anomalies</span><span class="o">.</span><span class="n">Anomalies</span><span class="o">.</span><span class="n">nonlinear_outliers_influencers_knn</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">to_list</span><span class="p">())</span>
+</pre></div>
+</div>
 </dd></dl>
 
 </dd></dl>
@@ -184,25 +294,91 @@ center_measure (str, optional): Central distribution measure to use ('mean' or '
 <dl class="py method">
 <dt class="sig sig-object py" id="CleanData.find_treat_duplicates.FindTreatDuplicates.drop_duplicates">
 <em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">drop_duplicates</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">identify_all</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'first'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="reference internal" href="_modules/CleanData/find_treat_duplicates.html#FindTreatDuplicates.drop_duplicates"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CleanData.find_treat_duplicates.FindTreatDuplicates.drop_duplicates" title="Permalink to this definition">¶</a></dt>
-<dd><p>Drop duplicated values in DataFrame. 
-Args:</p>
-<blockquote>
-<div><p>data (pd.DataFrame): pd.DataFrame
-subset (list | pd.Series): A list of features OR a singular searies. Default = None (applies to all features).
-identify_all (bool, optional): Defaults to 'first' (drop all duplicated values but keep the 'first' instances); If 'last' return only the last instances of the duplicated values; If False = drop all duplicates.</p>
-</div></blockquote>
+<dd><p>Drop duplicated values in DataFrame.</p>
+<dl class="simple">
+<dt>Parameters:</dt><dd><ul class="simple">
+<li><p>data (pd.DataFrame): pd.DataFrame</p></li>
+<li><p>subset (list | pd.Series): A list of features OR a singular searies. Default = None (applies to all features).</p></li>
+<li><p>identify_all (bool, optional): Defaults to 'first' (drop all duplicated values but keep the 'first' instances); If 'last' return only the last instances of the duplicated values; If False = drop all duplicates.</p></li>
+</ul>
+</dd>
+</dl>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Seed for reproducibility</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="c1"># Sample data generation</span>
+<span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">51</span><span class="p">),</span>
+    <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">([</span><span class="s1">&#39;John&#39;</span><span class="p">,</span> <span class="s1">&#39;Jane&#39;</span><span class="p">,</span> <span class="s1">&#39;Doe&#39;</span><span class="p">,</span> <span class="s1">&#39;Emily&#39;</span><span class="p">,</span> <span class="s1">&#39;Michael&#39;</span><span class="p">],</span> <span class="mi">50</span><span class="p">),</span>
+    <span class="s1">&#39;age&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">18</span><span class="p">,</span> <span class="mi">60</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">50</span><span class="p">),</span>
+    <span class="s1">&#39;city&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">([</span><span class="s1">&#39;New York&#39;</span><span class="p">,</span> <span class="s1">&#39;Los Angeles&#39;</span><span class="p">,</span> <span class="s1">&#39;Chicago&#39;</span><span class="p">,</span> <span class="s1">&#39;Houston&#39;</span><span class="p">,</span> <span class="s1">&#39;Phoenix&#39;</span><span class="p">],</span> <span class="mi">50</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+<span class="c1"># Introducing duplicates</span>
+<span class="n">duplicates</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+    <span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">51</span><span class="p">,</span> <span class="mi">52</span><span class="p">,</span> <span class="mi">53</span><span class="p">,</span> <span class="mi">54</span><span class="p">,</span> <span class="mi">55</span><span class="p">],</span>  <span class="c1"># New IDs to avoid confusion with the unique identifier intention</span>
+    <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;John&#39;</span><span class="p">,</span> <span class="s1">&#39;Jane&#39;</span><span class="p">,</span> <span class="s1">&#39;Doe&#39;</span><span class="p">,</span> <span class="s1">&#39;Emily&#39;</span><span class="p">,</span> <span class="s1">&#39;Michael&#39;</span><span class="p">],</span>
+    <span class="s1">&#39;age&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">25</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">45</span><span class="p">,</span> <span class="mi">22</span><span class="p">,</span> <span class="mi">35</span><span class="p">],</span>
+    <span class="s1">&#39;city&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;New York&#39;</span><span class="p">,</span> <span class="s1">&#39;Los Angeles&#39;</span><span class="p">,</span> <span class="s1">&#39;Chicago&#39;</span><span class="p">,</span> <span class="s1">&#39;Houston&#39;</span><span class="p">,</span> <span class="s1">&#39;Phoenix&#39;</span><span class="p">]</span>
+<span class="p">})</span>
+
+<span class="c1"># Adding duplicates to the original dataframe</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">df</span><span class="p">,</span> <span class="n">duplicates</span><span class="p">,</span> <span class="n">duplicates</span><span class="p">])</span>  <span class="c1"># Adding twice for multiple duplicates</span>
+
+<span class="c1"># Shuffling the dataframe to mix duplicates</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">frac</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Return all the duplicated values</span>
+<span class="n">CleanData</span><span class="o">.</span><span class="n">find_treat_duplicates</span><span class="o">.</span><span class="n">FindTreatDuplicates</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">subset</span><span class="o">=</span><span class="s1">&#39;id&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="CleanData.find_treat_duplicates.FindTreatDuplicates.find_duplicates">
 <em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">find_duplicates</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">identify_all</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="reference internal" href="_modules/CleanData/find_treat_duplicates.html#FindTreatDuplicates.find_duplicates"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CleanData.find_treat_duplicates.FindTreatDuplicates.find_duplicates" title="Permalink to this definition">¶</a></dt>
-<dd><p>Idenfify duplicated values in DataFrame. 
-Args:</p>
-<blockquote>
-<div><p>data (pd.DataFrame): pd.DataFrame
-subset (list | pd.Series): A list of features OR a singular searies. Default = None (return duplicates for the intire dataset).
-identify_all (bool, optional): If 'first' specified, then return only the first instances of the duplicated values. Defaults to False (identify all duplicated values). If 'last' return only the last instances of the duplicated values. Defaults to False (identify all duplicated values)</p>
-</div></blockquote>
+<dd><p>Idenfify duplicated values in DataFrame.</p>
+<dl class="simple">
+<dt>Parameters:</dt><dd><ul class="simple">
+<li><p>data (pd.DataFrame): pd.DataFrame</p></li>
+<li><p>subset (list | pd.Series): A list of features OR a singular searies. Default = None (return duplicates for the intire dataset).</p></li>
+<li><p>identify_all (bool, optional): If 'first' specified, then return only the first instances of the duplicated values. Defaults to False (identify all duplicated values). If 'last' return only the last instances of the duplicated values. Defaults to False (identify all duplicated values)</p></li>
+</ul>
+</dd>
+</dl>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Seed for reproducibility</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="c1"># Sample data generation</span>
+<span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">51</span><span class="p">),</span>
+    <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">([</span><span class="s1">&#39;John&#39;</span><span class="p">,</span> <span class="s1">&#39;Jane&#39;</span><span class="p">,</span> <span class="s1">&#39;Doe&#39;</span><span class="p">,</span> <span class="s1">&#39;Emily&#39;</span><span class="p">,</span> <span class="s1">&#39;Michael&#39;</span><span class="p">],</span> <span class="mi">50</span><span class="p">),</span>
+    <span class="s1">&#39;age&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">18</span><span class="p">,</span> <span class="mi">60</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">50</span><span class="p">),</span>
+    <span class="s1">&#39;city&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">([</span><span class="s1">&#39;New York&#39;</span><span class="p">,</span> <span class="s1">&#39;Los Angeles&#39;</span><span class="p">,</span> <span class="s1">&#39;Chicago&#39;</span><span class="p">,</span> <span class="s1">&#39;Houston&#39;</span><span class="p">,</span> <span class="s1">&#39;Phoenix&#39;</span><span class="p">],</span> <span class="mi">50</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+<span class="c1"># Introducing duplicates</span>
+<span class="n">duplicates</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+    <span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">51</span><span class="p">,</span> <span class="mi">52</span><span class="p">,</span> <span class="mi">53</span><span class="p">,</span> <span class="mi">54</span><span class="p">,</span> <span class="mi">55</span><span class="p">],</span>  <span class="c1"># New IDs to avoid confusion with the unique identifier intention</span>
+    <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;John&#39;</span><span class="p">,</span> <span class="s1">&#39;Jane&#39;</span><span class="p">,</span> <span class="s1">&#39;Doe&#39;</span><span class="p">,</span> <span class="s1">&#39;Emily&#39;</span><span class="p">,</span> <span class="s1">&#39;Michael&#39;</span><span class="p">],</span>
+    <span class="s1">&#39;age&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">25</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">45</span><span class="p">,</span> <span class="mi">22</span><span class="p">,</span> <span class="mi">35</span><span class="p">],</span>
+    <span class="s1">&#39;city&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;New York&#39;</span><span class="p">,</span> <span class="s1">&#39;Los Angeles&#39;</span><span class="p">,</span> <span class="s1">&#39;Chicago&#39;</span><span class="p">,</span> <span class="s1">&#39;Houston&#39;</span><span class="p">,</span> <span class="s1">&#39;Phoenix&#39;</span><span class="p">]</span>
+<span class="p">})</span>
+
+<span class="c1"># Adding duplicates to the original dataframe</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">df</span><span class="p">,</span> <span class="n">duplicates</span><span class="p">,</span> <span class="n">duplicates</span><span class="p">])</span>  <span class="c1"># Adding twice for multiple duplicates</span>
+
+<span class="c1"># Shuffling the dataframe to mix duplicates</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">frac</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Return all the duplicated values</span>
+<span class="n">CleanData</span><span class="o">.</span><span class="n">find_treat_duplicates</span><span class="o">.</span><span class="n">FindTreatDuplicates</span><span class="o">.</span><span class="n">find_duplicates</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">subset</span><span class="o">=</span><span class="s1">&#39;id&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 </dd></dl>
@@ -219,12 +395,34 @@ identify_all (bool, optional): If 'first' specified, then return only the first 
 <em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">optimise_mem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="reference internal" href="_modules/CleanData/memory.html#Memory.optimise_mem"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CleanData.memory.Memory.optimise_mem" title="Permalink to this definition">¶</a></dt>
 <dd><p>Optimize memory usage of a DataFrame.</p>
 <dl class="simple">
-<dt>Args:</dt><dd><p>data (pd.DataFrame): Input DataFrame to be optimized.
-verbose (bool, optional): Whether to display memory reduction information. Defaults to True.</p>
+<dt>Parameters:</dt><dd><ul class="simple">
+<li><p>data (pd.DataFrame): Input DataFrame to be optimized.</p></li>
+<li><p>verbose (bool, optional): Whether to display memory reduction information. Defaults to True.</p></li>
+</ul>
 </dd>
 <dt>Returns:</dt><dd><p>pd.DataFrame: Optimized DataFrame with reduced memory usage.</p>
 </dd>
 </dl>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import dependencies</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span> 
+<span class="kn">import</span> <span class="nn">CleanData</span>
+
+<span class="c1"># Sample data generation</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+    <span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">51</span><span class="p">),</span>
+    <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">([</span><span class="s1">&#39;John&#39;</span><span class="p">,</span> <span class="s1">&#39;Jane&#39;</span><span class="p">,</span> <span class="s1">&#39;Doe&#39;</span><span class="p">,</span> <span class="s1">&#39;Emily&#39;</span><span class="p">,</span> <span class="s1">&#39;Michael&#39;</span><span class="p">],</span> <span class="mi">50</span><span class="p">),</span>
+    <span class="s1">&#39;age&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">18</span><span class="p">,</span> <span class="mi">60</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">50</span><span class="p">),</span>
+    <span class="s1">&#39;city&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">([</span><span class="s1">&#39;New York&#39;</span><span class="p">,</span> <span class="s1">&#39;Los Angeles&#39;</span><span class="p">,</span> <span class="s1">&#39;Chicago&#39;</span><span class="p">,</span> <span class="s1">&#39;Houston&#39;</span><span class="p">,</span> <span class="s1">&#39;Phoenix&#39;</span><span class="p">],</span> <span class="mi">50</span><span class="p">)</span>
+<span class="p">})</span>
+
+<span class="c1"># Check your corrent memory: </span>
+<span class="n">data</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
+
+<span class="c1"># Optimise your DataFrame memory usage</span>
+<span class="n">CleanData</span><span class="o">.</span><span class="n">Memory</span><span class="o">.</span><span class="n">optimise_mem</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 </dd></dl>
@@ -247,12 +445,27 @@ aggregations, comparisons, and single-row lookups.</p>
 <dl class="simple">
 <dt>Example usage:</dt><dd><p>Ask('Which city has the highest download speed?', data)</p>
 </dd>
-<dt>Args:</dt><dd><p>query (str): The natural language question to be asked about the data.
-data (pd.DataFrame): The pandas DataFrame containing the data to be queried.</p>
+<dt>Parameters:</dt><dd><ul class="simple">
+<li><p>query (str): The natural language question to be asked about the data.</p></li>
+<li><p>data (pd.DataFrame): The pandas DataFrame containing the data to be queried.</p></li>
+</ul>
 </dd>
 <dt>Returns:</dt><dd><p>None. The answer is printed out.</p>
 </dd>
 </dl>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import Depenencies</span>
+<span class="kn">import</span> <span class="nn">CleanData</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+
+<span class="c1"># Create a query</span>
+<span class="n">query</span> <span class="o">=</span> <span class="s2">&quot;What is the highest in the hoursperweek feature in my data?&quot;</span>
+
+<span class="c1"># Apply the Ask method on your DataFrame</span>
+<span class="n">CleanData</span><span class="o">.</span><span class="n">QA</span><span class="o">.</span><span class="n">Ask</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">income</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Note: <strong>I am currently working to scale this method, currently can be applied on max 256 records at a time</strong></p>
 </dd></dl>
 
 <dl class="py attribute">
@@ -289,11 +502,42 @@ data (pd.DataFrame): The pandas DataFrame containing the data to be queried.</p>
 <em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">correct_sentence</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">strings</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/CleanData/text_typos.html#TextTypos.correct_sentence"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CleanData.text_typos.TextTypos.correct_sentence" title="Permalink to this definition">¶</a></dt>
 <dd><p>Correct spelling in a sentence using SpellChecker.</p>
 <dl class="simple">
-<dt>Args:</dt><dd><p>strings (str): Input sentence to be corrected.</p>
+<dt>Parameters:</dt><dd><ul class="simple">
+<li><p>strings (str): Input sentence to be corrected.</p></li>
+</ul>
 </dd>
 <dt>Returns:</dt><dd><p>str: Corrected version of the input sentence.</p>
 </dd>
 </dl>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import dependencies</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">CleanData</span>
+
+<span class="c1"># sample data</span>
+<span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;Text&#39;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s2">&quot;The brown fox jumps over the lazy dog.&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;She is an engeneer and work in a tech company.&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;I&#39;m goign to the beech this weekend.&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;His favorit! color is purpel.&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;The concert was amazig, I reccomend it to everyone.&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;The resturant was ful of delicius food.&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;I have an appoitment with the docter tomorrow.&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;The weathr is nice today, let&#39;s go for a picnick.&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;I&#39;m intersted in biologgy and study it at the univeristy.&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;He&#39;s a talanted musitian and plays the gitar very well.&quot;</span>
+    <span class="p">]</span>
+<span class="p">}</span>
+
+<span class="c1"># Create DataFrame</span>
+<span class="n">occupation_df_eval</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+<span class="c1"># Correct the text typos</span>
+<span class="n">occupation_df_eval</span><span class="p">[</span><span class="s1">&#39;Text&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">occupation_df_eval</span><span class="p">[</span><span class="s1">&#39;Text&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">CleanData</span><span class="o">.</span><span class="n">text_typos</span><span class="o">.</span><span class="n">TextTypos</span><span class="o">.</span><span class="n">correct_sentence</span><span class="p">)</span>
+
+<span class="n">occupation_df_eval</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py method">
@@ -301,11 +545,61 @@ data (pd.DataFrame): The pandas DataFrame containing the data to be queried.</p>
 <em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">correct_word</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">word</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/CleanData/text_typos.html#TextTypos.correct_word"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CleanData.text_typos.TextTypos.correct_word" title="Permalink to this definition">¶</a></dt>
 <dd><p>Correct spelling of a word using SpellChecker.</p>
 <dl class="simple">
-<dt>Args:</dt><dd><p>word (str): Input word to be corrected.</p>
+<dt>Parameters:</dt><dd><ul class="simple">
+<li><p>word (str): Input word to be corrected.</p></li>
+</ul>
 </dd>
 <dt>Returns:</dt><dd><p>str: Corrected version of the input word.</p>
 </dd>
 </dl>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import dependencies</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">random</span>
+
+<span class="c1"># List of occupations with intentional typos</span>
+<span class="n">occupations_with_typos</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;Docter&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Engeneer&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Progrmmer&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Teahcer&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Dentest&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Writter&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Nurse&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Actrress&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Pilot&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Surgeon&quot;</span>
+<span class="p">]</span>
+
+<span class="c1"># List of correct occupations</span>
+<span class="n">correct_occupations</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;Doctor&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Engineer&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Programmer&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Teacher&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Dentist&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Writer&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Nurse&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Actress&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Pilot&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Surgeon&quot;</span>
+<span class="p">]</span>
+
+<span class="c1"># Generate a dataframe with 100 records</span>
+<span class="n">occupation_df_typos</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;Occupation&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">occupations_with_typos</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">100</span><span class="p">)]})</span>
+<span class="n">occupation_df_correct</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;Occupation&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">correct_occupations</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">100</span><span class="p">)]})</span>
+
+<span class="c1"># Concatenate the dataframes</span>
+<span class="n">occupation_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">occupation_df_typos</span><span class="p">,</span> <span class="n">occupation_df_correct</span><span class="p">],</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Display the dataframe</span>
+<span class="n">occupation_df</span> <span class="o">=</span> <span class="n">occupation_df</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">frac</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="c1"># Apply correction to the entire dataframe</span>
+<span class="n">corrected_df</span> <span class="o">=</span> <span class="n">occupation_df</span><span class="o">.</span><span class="n">applymap</span><span class="p">(</span><span class="n">CleanData</span><span class="o">.</span><span class="n">text_typos</span><span class="o">.</span><span class="n">TextTypos</span><span class="o">.</span><span class="n">correct_word</span><span class="p">)</span>
+
+<span class="n">corrected_df</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py method">
@@ -313,12 +607,32 @@ data (pd.DataFrame): The pandas DataFrame containing the data to be queried.</p>
 <em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">object_to_numeric</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">features</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="reference internal" href="_modules/CleanData/text_typos.html#TextTypos.object_to_numeric"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CleanData.text_typos.TextTypos.object_to_numeric" title="Permalink to this definition">¶</a></dt>
 <dd><p>Convert specified columns from object type to numeric type.</p>
 <dl class="simple">
-<dt>Args:</dt><dd><p>df (pd.DataFrame): Input DataFrame containing columns to be converted.
-features (list): List of column names to be converted to numeric type.</p>
+<dt>Parameters:</dt><dd><ul class="simple">
+<li><p>df (pd.DataFrame): Input DataFrame containing columns to be converted.</p></li>
+<li><p>features (list): List of column names to be converted to numeric type.</p></li>
+</ul>
 </dd>
 <dt>Returns:</dt><dd><p>pd.DataFrame: DataFrame with specified columns converted to numeric type.</p>
 </dd>
 </dl>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import dependencies</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">CleanData</span>
+
+<span class="c1"># Create a DataFrame</span>
+<span class="n">s1</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+
+<span class="c1"># Enforce string values in the DataFrame columns </span>
+<span class="n">s1</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">15</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;test&#39;</span>
+<span class="n">s1</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">s1</span>
+
+<span class="c1"># Trasform the DataFrame columns back to numerical values</span>
+<span class="n">CleanData</span><span class="o">.</span><span class="n">TextTypos</span><span class="o">.</span><span class="n">object_to_numeric</span><span class="p">(</span><span class="n">s1</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+
+<span class="n">s1</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py method">
@@ -326,11 +640,40 @@ features (list): List of column names to be converted to numeric type.</p>
 <em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">strip_and_lower_strings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="reference internal" href="_modules/CleanData/text_typos.html#TextTypos.strip_and_lower_strings"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CleanData.text_typos.TextTypos.strip_and_lower_strings" title="Permalink to this definition">¶</a></dt>
 <dd><p>Strip whitespace and convert strings to lowercase in DataFrame.</p>
 <dl class="simple">
-<dt>Args:</dt><dd><p>data (pd.DataFrame): Input DataFrame containing string columns.</p>
+<dt>Parameters:</dt><dd><ul class="simple">
+<li><p>data (pd.DataFrame): Input DataFrame containing string columns.</p></li>
+</ul>
 </dd>
 <dt>Returns:</dt><dd><p>pd.DataFrame: DataFrame with strings stripped of leading/trailing whitespace and converted to lowercase.</p>
 </dd>
 </dl>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import dependencies</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">CleanData</span>
+
+<span class="c1"># sample data</span>
+<span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;Text&#39;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s2">&quot;    The quck brown fox jumps over the lazy dog.&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;She is an engeneer and work in a tech company.&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;I&#39;m goign to the beech this weekend.&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;    His favorit! color is purpel.&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;The concert was amazig, I reccomend it to everyone.&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;    The resturant was ful of delicius food.&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;I have an appoitment with the docter tomorrow.&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;The weathr is nice today, let&#39;s go for a picnick.&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;   I&#39;m intersted in biologgy and study it at the univeristy.&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;He&#39;s a talanted musitian and plays the gitar very well.&quot;</span>
+    <span class="p">]</span>
+<span class="p">}</span>
+
+<span class="c1"># Create DataFrame</span>
+<span class="n">occupation_df_eval</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+<span class="c1"># Lower case the data &amp; strip whitespaces</span>
+<span class="n">CleanData</span><span class="o">.</span><span class="n">text_typos</span><span class="o">.</span><span class="n">TextTypos</span><span class="o">.</span><span class="n">strip_and_lower_strings</span><span class="p">(</span><span class="n">occupation_df_eval</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>
+</pre></div>
+</div>
 </dd></dl>
 
 </dd></dl>
@@ -347,7 +690,7 @@ features (list): List of column names to be converted to numeric type.</p>
 <em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">DataImpute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">features</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">missing_values</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">nan</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">numeric_strategy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mean'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">string_strategy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'constant'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">string_fill_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CleanData/treat_na.html#TreatNA.DataImpute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CleanData.treat_na.TreatNA.DataImpute" title="Permalink to this definition">¶</a></dt>
 <dd><p>Apply univariate data imputation for numerical &amp; categorical strategies. Suitable for MCAR cases (A variable is missing completely at random (MCAR) if the probability of being missing is the same for all the observations)</p>
 <dl class="simple">
-<dt>Args:</dt><dd><ul class="simple">
+<dt>Parameters:</dt><dd><ul class="simple">
 <li><p>data (pd.DataFrame)</p></li>
 <li><p>features (list)</p></li>
 <li><p>missing_values (the placeholder for the missing values): <a href="#id1"><span class="problematic" id="id2">**</span></a>Defaults to np.nan;  Can also be pd.NA, int, float,  or str.</p></li>
@@ -359,6 +702,25 @@ features (list): List of column names to be converted to numeric type.</p>
 <dt>Returns:</dt><dd><p>_type_: pd.DataFrame</p>
 </dd>
 </dl>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import Dependencies</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">CleanData</span>
+
+<span class="c1"># Create sample DataFrame</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+    <span class="s1">&#39;A&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span>
+    <span class="s1">&#39;B&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39; apple&#39;</span><span class="p">,</span> <span class="s1">&#39; banana&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="s1">&#39;orange&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">],</span>
+    <span class="s1">&#39;C&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;cat&#39;</span><span class="p">,</span> <span class="s1">&#39;dog&#39;</span><span class="p">,</span> <span class="s1">&#39;elephant&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">],</span>
+<span class="p">})</span>
+
+<span class="c1"># Create a list containing the features to impute the data </span>
+<span class="n">features</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">]</span>
+
+<span class="c1"># Apply Data Impute on the dataset -&gt; here&#39;s how you can impute data both for numeric and categorical features</span>
+<span class="n">CleanData</span><span class="o">.</span><span class="n">TreatNA</span><span class="o">.</span><span class="n">DataImpute</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">features</span><span class="p">,</span> <span class="n">numeric_strategy</span><span class="o">=</span><span class="s1">&#39;mean&#39;</span><span class="p">,</span> <span class="n">string_strategy</span><span class="o">=</span><span class="s1">&#39;constant&#39;</span><span class="p">,</span> <span class="n">string_fill_value</span><span class="o">=</span><span class="s1">&#39;unknown&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py method">
@@ -366,11 +728,26 @@ features (list): List of column names to be converted to numeric type.</p>
 <em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">IdentifyNAs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="reference internal" href="_modules/CleanData/treat_na.html#TreatNA.IdentifyNAs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CleanData.treat_na.TreatNA.IdentifyNAs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Identify rows containing missing values in a DataFrame.</p>
 <dl class="simple">
-<dt>Args:</dt><dd><p>data (pd.DataFrame): Input DataFrame to search for missing values.</p>
+<dt>Parameters:</dt><dd><ul class="simple">
+<li><p>data (pd.DataFrame): Input DataFrame to search for missing values.</p></li>
+</ul>
 </dd>
 <dt>Returns:</dt><dd><p>pd.DataFrame: DataFrame containing rows with missing values.</p>
 </dd>
 </dl>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">CleanData</span>
+
+<span class="c1"># Create a sample DataFrame</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+    <span class="s1">&#39;Column1&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">NA</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span>
+    <span class="s1">&#39;Column2&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;apple&#39;</span><span class="p">,</span> <span class="s1">&#39;banana&#39;</span><span class="p">,</span> <span class="s1">&#39;null&#39;</span><span class="p">,</span> <span class="s1">&#39;orange&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">],</span>
+    <span class="s1">&#39;Column3&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;cat&#39;</span><span class="p">,</span> <span class="s1">&#39;dog&#39;</span><span class="p">,</span> <span class="s1">&#39;missing&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;empty&#39;</span><span class="p">]</span>
+<span class="p">})</span>
+
+<span class="n">CleanData</span><span class="o">.</span><span class="n">TreatNA</span><span class="o">.</span><span class="n">IdentifyNAs</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py method">
@@ -379,11 +756,33 @@ features (list): List of column names to be converted to numeric type.</p>
 <dd><p>Missing of values is not at random (MNAR) if their being missing depends on information not recorded in the dataset. Transaction dataset = the values are missing if if we don't have transaction_number (NOTE: here we could have more the one independent variable)
 NOTE: <a href="#id3"><span class="problematic" id="id4">**</span></a>Independent = transaction_number; <a href="#id5"><span class="problematic" id="id6">**</span></a>dependent (in their occurance): the rest of the variables</p>
 <dl class="simple">
-<dt>Args:</dt><dd><p>data (_type_): pd.DataFrame / np.array (2d array)</p>
+<dt>Parameters:</dt><dd><ul class="simple">
+<li><p>data (_type_): pd.DataFrame / np.array (2d array)</p></li>
+</ul>
 </dd>
 <dt>Returns:</dt><dd><p>pd.DataFrame: This function will drop all corresponsing NA values from the dependent variables based on the Independent variable/s</p>
 </dd>
 </dl>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import Dependencies</span>
+<span class="kn">import</span> <span class="nn">CleanData</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="c1"># Sample data</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+    <span class="s2">&quot;CID&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">20</span><span class="p">),</span>
+    <span class="s2">&quot;transaction_number&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">19</span><span class="p">),</span>
+    <span class="s2">&quot;Column3&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">20</span><span class="p">)],</span>
+    <span class="s2">&quot;Column4&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">20</span><span class="p">)]</span>
+<span class="p">})</span>
+<span class="n">df</span><span class="p">[</span><span class="s2">&quot;transaction_number&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:</span><span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+<span class="n">df</span><span class="p">[</span><span class="s2">&quot;Column3&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">5</span><span class="p">:]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;CID&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+<span class="n">df</span><span class="p">[</span><span class="s2">&quot;Column4&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">5</span><span class="p">:]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;CID&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+
+<span class="n">df</span>
+<span class="n">CleanData</span><span class="o">.</span><span class="n">TreatNA</span><span class="o">.</span><span class="n">MNAR</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;transaction_number&quot;</span><span class="p">,</span> <span class="s2">&quot;Column3&quot;</span><span class="p">,</span> <span class="s2">&quot;Column4&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py method">
@@ -391,11 +790,29 @@ NOTE: <a href="#id3"><span class="problematic" id="id4">**</span></a>Independent
 <em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">complete_case_na</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="reference internal" href="_modules/CleanData/treat_na.html#TreatNA.complete_case_na"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CleanData.treat_na.TreatNA.complete_case_na" title="Permalink to this definition">¶</a></dt>
 <dd><p>Filter DataFrame to retain rows with complete case or edge case missing values.</p>
 <dl class="simple">
-<dt>Args:</dt><dd><p>data (pd.DataFrame): Input DataFrame containing potentially incomplete rows.</p>
+<dt>Parameters:</dt><dd><ul class="simple">
+<li><p>data (pd.DataFrame): Input DataFrame containing potentially incomplete rows.</p></li>
+</ul>
 </dd>
 <dt>Returns:</dt><dd><p>pd.DataFrame: DataFrame with rows containing complete case or edge case missing values.</p>
 </dd>
 </dl>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import Dependencies</span>
+<span class="kn">import</span> <span class="nn">CleanData</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="c1"># Creating a DataFrame</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+    <span class="s1">&#39;A&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;missing&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span>
+    <span class="s1">&#39;B&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;apple&#39;</span><span class="p">,</span> <span class="s1">&#39;banana&#39;</span><span class="p">,</span> <span class="s1">&#39;null&#39;</span><span class="p">,</span> <span class="s1">&#39;orange&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">],</span>
+    <span class="s1">&#39;C&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;cat&#39;</span><span class="p">,</span> <span class="s1">&#39;dog&#39;</span><span class="p">,</span> <span class="s1">&#39;elephant&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;empty&#39;</span><span class="p">]</span>
+<span class="p">})</span>
+
+<span class="c1"># Explore complete case na instances</span>
+<span class="n">CleanData</span><span class="o">.</span><span class="n">TreatNA</span><span class="o">.</span><span class="n">complete_case_na</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py method">
@@ -403,11 +820,43 @@ NOTE: <a href="#id3"><span class="problematic" id="id4">**</span></a>Independent
 <em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">drop_complete_case_na</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="reference internal" href="_modules/CleanData/treat_na.html#TreatNA.drop_complete_case_na"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CleanData.treat_na.TreatNA.drop_complete_case_na" title="Permalink to this definition">¶</a></dt>
 <dd><p>Drop rows with complete case missing values from a DataFrame.</p>
 <dl class="simple">
-<dt>Args:</dt><dd><p>data (pd.DataFrame): Input DataFrame containing potentially incomplete rows.</p>
+<dt>Parameters:</dt><dd><ul class="simple">
+<li><p>data : pd.DataFrame Input DataFrame containing potentially incomplete rows.</p></li>
+</ul>
 </dd>
-<dt>Returns:</dt><dd><p>pd.DataFrame: DataFrame with complete case rows retained.</p>
+<dt>Returns: </dt><dd><p>pd.DataFrame with complete case rows retained.</p>
 </dd>
 </dl>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import Dependencies</span>
+<span class="kn">import</span> <span class="nn">CleanData</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="c1"># Sample data</span>
+<span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;Column1&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">50</span><span class="p">),</span>
+    <span class="s1">&#39;Column2&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">([</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">],</span> <span class="mi">50</span><span class="p">),</span>
+    <span class="s1">&#39;Column3&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="c1"># Convert to DataFrame</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+<span class="c1"># Set 10 random rows to NA</span>
+<span class="n">rows_to_nan</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">rows_to_nan</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+
+<span class="c1"># Add full records with specified values</span>
+<span class="n">missing_values</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;missing&#39;</span><span class="p">,</span> <span class="s1">&#39;null&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;empty&#39;</span><span class="p">]</span>
+<span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">missing_values</span><span class="p">:</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">)]</span> <span class="o">=</span> <span class="p">[</span><span class="n">value</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+
+<span class="c1"># Drop rows with complete cases containing missing values</span>
+<span class="n">cleaned_data</span> <span class="o">=</span> <span class="n">CleanData</span><span class="o">.</span><span class="n">TreatNA</span><span class="o">.</span><span class="n">drop_complete_case_na</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">cleaned_data</span><span class="p">)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py method">
@@ -416,14 +865,40 @@ NOTE: <a href="#id3"><span class="problematic" id="id4">**</span></a>Independent
 <dd><p>Identify Missing at Random (MAR) cases using Logistic Regression.</p>
 <p>This method aims to detect Missing at Random (MAR) instances within a dataset, where the occurrence of missing values systematically relates to observed data. It employs logistic regression to identify columns with missing values and returns the largest coefficients associated with each feature.</p>
 <dl class="simple">
-<dt>Args:</dt><dd><p>df (pd.DataFrame): Input Pandas DataFrame containing data with missing values.
-max_iter (int, optional): Maximum number of iterations for logistic regression convergence. Defaults to 1000.</p>
+<dt>Parameters:</dt><dd><ul class="simple">
+<li><p>df (pd.DataFrame): Input Pandas DataFrame containing data with missing values.</p></li>
+<li><p>max_iter (int, optional): Maximum number of iterations for logistic regression convergence. Defaults to 1000.</p></li>
+</ul>
 </dd>
 <dt>Returns:</dt><dd><p>pd.DataFrame: DataFrame containing information about the largest coefficients of features obtained from logistic regression.</p>
 </dd>
 <dt>Raises:</dt><dd><p>ValueError: If fitting the logistic regression model encounters an issue.</p>
 </dd>
 </dl>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import dependencies</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">CleanData</span>
+
+<span class="c1"># Sample Data Creation</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>  <span class="c1"># For reproducible results</span>
+<span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;Age&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">60</span><span class="p">,</span> <span class="mi">100</span><span class="p">),</span>
+    <span class="s1">&#39;Income&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">5000</span><span class="p">,</span> <span class="mi">20000</span><span class="p">,</span> <span class="mi">100</span><span class="p">),</span>
+    <span class="s1">&#39;Gender&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">([</span><span class="s1">&#39;Male&#39;</span><span class="p">,</span> <span class="s1">&#39;Female&#39;</span><span class="p">],</span> <span class="mi">100</span><span class="p">),</span>
+    <span class="s1">&#39;Has_Car&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="mi">100</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="c1"># Create the DataFrame</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+<span class="c1"># Create a MAR case </span>
+<span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;Gender&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Male&quot;</span><span class="p">,</span> <span class="s2">&quot;Has_Car&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+
+<span class="o">@</span> <span class="n">Leverage</span> <span class="n">the</span> <span class="n">logistic</span> <span class="n">regression</span> <span class="n">MAR</span> <span class="n">identifier</span>
+<span class="n">CleanData</span><span class="o">.</span><span class="n">TreatNA</span><span class="o">.</span><span class="n">logistic_regression_MAR_identifier</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s2">&quot;Coefficient&quot;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 </dd></dl>
@@ -438,9 +913,6 @@ max_iter (int, optional): Maximum number of iterations for logistic regression c
                         <nav aria-label="Page navigation" class="py-4 my-5 clearfix font-weight-bold border-top">
     <a class="float-left" href="modules.html" title="Previous">
         <span aria-hidden="true">←&nbsp;</span>CleanData-package
-    </a>
-    <a class="float-right" href="setup.html" title="Next">
-        setup module <span aria-hidden="true">&nbsp;→</span>
     </a>
 </nav>
                     </div>

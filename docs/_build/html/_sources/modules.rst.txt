@@ -5,4 +5,3 @@ CleanData-package
    :maxdepth: 4
 
    CleanData
-   setup

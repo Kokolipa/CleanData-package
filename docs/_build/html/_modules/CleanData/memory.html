@@ -58,7 +58,6 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../modules.html">CleanData-package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../CleanData.html">CleanData package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../setup.html">setup module</a></li>
 </ul>
 </li>
 </ul>
@@ -128,12 +127,36 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Optimize memory usage of a DataFrame.</span>
 
-<span class="sd">        Args:</span>
-<span class="sd">            data (pd.DataFrame): Input DataFrame to be optimized.</span>
-<span class="sd">            verbose (bool, optional): Whether to display memory reduction information. Defaults to True.</span>
+<span class="sd">        Parameters:</span>
+<span class="sd">            - data (pd.DataFrame): Input DataFrame to be optimized.</span>
+<span class="sd">            - verbose (bool, optional): Whether to display memory reduction information. Defaults to True.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            pd.DataFrame: Optimized DataFrame with reduced memory usage.</span>
+<span class="sd">        </span>
+<span class="sd">        Example usage: </span>
+<span class="sd">        --------------</span>
+<span class="sd">        ..  code-block:: python</span>
+<span class="sd">        </span>
+<span class="sd">            # Import dependencies</span>
+<span class="sd">            import pandas as pd</span>
+<span class="sd">            import numpy as np </span>
+<span class="sd">            import CleanData</span>
+
+<span class="sd">            # Sample data generation</span>
+<span class="sd">            data = pd.DataFrame({</span>
+<span class="sd">                &#39;id&#39;: np.arange(1, 51),</span>
+<span class="sd">                &#39;name&#39;: np.random.choice([&#39;John&#39;, &#39;Jane&#39;, &#39;Doe&#39;, &#39;Emily&#39;, &#39;Michael&#39;], 50),</span>
+<span class="sd">                &#39;age&#39;: np.random.randint(18, 60, size=50),</span>
+<span class="sd">                &#39;city&#39;: np.random.choice([&#39;New York&#39;, &#39;Los Angeles&#39;, &#39;Chicago&#39;, &#39;Houston&#39;, &#39;Phoenix&#39;], 50)</span>
+<span class="sd">            })</span>
+
+<span class="sd">            # Check your corrent memory: </span>
+<span class="sd">            data.info()</span>
+
+<span class="sd">            # Optimise your DataFrame memory usage</span>
+<span class="sd">            CleanData.Memory.optimise_mem(data)</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>      
         <span class="c1"># Create a function to optimise the memory</span>
         <span class="n">start_mem</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">memory_usage</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">/</span> <span class="mi">1024</span> <span class="o">**</span> <span class="mi">2</span>

@@ -16,12 +16,36 @@ class Memory:
         """
         Optimize memory usage of a DataFrame.
 
-        Args:
-            data (pd.DataFrame): Input DataFrame to be optimized.
-            verbose (bool, optional): Whether to display memory reduction information. Defaults to True.
+        Parameters:
+            - data (pd.DataFrame): Input DataFrame to be optimized.
+            - verbose (bool, optional): Whether to display memory reduction information. Defaults to True.
 
         Returns:
             pd.DataFrame: Optimized DataFrame with reduced memory usage.
+        
+        Example usage: 
+        --------------
+        ..  code-block:: python
+        
+            # Import dependencies
+            import pandas as pd
+            import numpy as np 
+            import CleanData
+
+            # Sample data generation
+            data = pd.DataFrame({
+                'id': np.arange(1, 51),
+                'name': np.random.choice(['John', 'Jane', 'Doe', 'Emily', 'Michael'], 50),
+                'age': np.random.randint(18, 60, size=50),
+                'city': np.random.choice(['New York', 'Los Angeles', 'Chicago', 'Houston', 'Phoenix'], 50)
+            })
+
+            # Check your corrent memory: 
+            data.info()
+
+            # Optimise your DataFrame memory usage
+            CleanData.Memory.optimise_mem(data)
+
         """      
         # Create a function to optimise the memory
         start_mem = data.memory_usage().sum() / 1024 ** 2

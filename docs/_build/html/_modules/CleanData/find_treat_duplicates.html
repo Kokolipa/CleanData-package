@@ -58,7 +58,6 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../modules.html">CleanData-package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../CleanData.html">CleanData package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../setup.html">setup module</a></li>
 </ul>
 </li>
 </ul>
@@ -124,10 +123,46 @@
 <div class="viewcode-block" id="FindTreatDuplicates.find_duplicates"><a class="viewcode-back" href="../../CleanData.html#CleanData.find_treat_duplicates.FindTreatDuplicates.find_duplicates">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">find_duplicates</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">subset</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">identify_all</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Idenfify duplicated values in DataFrame. </span>
-<span class="sd">        Args:</span>
-<span class="sd">            data (pd.DataFrame): pd.DataFrame</span>
-<span class="sd">            subset (list | pd.Series): A list of features OR a singular searies. Default = None (return duplicates for the intire dataset).</span>
-<span class="sd">            identify_all (bool, optional): If &#39;first&#39; specified, then return only the first instances of the duplicated values. Defaults to False (identify all duplicated values). If &#39;last&#39; return only the last instances of the duplicated values. Defaults to False (identify all duplicated values)</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            - data (pd.DataFrame): pd.DataFrame</span>
+<span class="sd">            - subset (list | pd.Series): A list of features OR a singular searies. Default = None (return duplicates for the intire dataset).</span>
+<span class="sd">            - identify_all (bool, optional): If &#39;first&#39; specified, then return only the first instances of the duplicated values. Defaults to False (identify all duplicated values). If &#39;last&#39; return only the last instances of the duplicated values. Defaults to False (identify all duplicated values)</span>
+<span class="sd">        </span>
+<span class="sd">        Example usage:</span>
+<span class="sd">        --------------</span>
+<span class="sd">        .. code-block:: python</span>
+
+<span class="sd">            # Seed for reproducibility</span>
+<span class="sd">            np.random.seed(0)</span>
+
+<span class="sd">            # Sample data generation</span>
+<span class="sd">            data = {</span>
+<span class="sd">                &#39;id&#39;: np.arange(1, 51),</span>
+<span class="sd">                &#39;name&#39;: np.random.choice([&#39;John&#39;, &#39;Jane&#39;, &#39;Doe&#39;, &#39;Emily&#39;, &#39;Michael&#39;], 50),</span>
+<span class="sd">                &#39;age&#39;: np.random.randint(18, 60, size=50),</span>
+<span class="sd">                &#39;city&#39;: np.random.choice([&#39;New York&#39;, &#39;Los Angeles&#39;, &#39;Chicago&#39;, &#39;Houston&#39;, &#39;Phoenix&#39;], 50)</span>
+<span class="sd">            }</span>
+
+<span class="sd">            df = pd.DataFrame(data)</span>
+
+<span class="sd">            # Introducing duplicates</span>
+<span class="sd">            duplicates = pd.DataFrame({</span>
+<span class="sd">                &#39;id&#39;: [51, 52, 53, 54, 55],  # New IDs to avoid confusion with the unique identifier intention</span>
+<span class="sd">                &#39;name&#39;: [&#39;John&#39;, &#39;Jane&#39;, &#39;Doe&#39;, &#39;Emily&#39;, &#39;Michael&#39;],</span>
+<span class="sd">                &#39;age&#39;: [25, 30, 45, 22, 35],</span>
+<span class="sd">                &#39;city&#39;: [&#39;New York&#39;, &#39;Los Angeles&#39;, &#39;Chicago&#39;, &#39;Houston&#39;, &#39;Phoenix&#39;]</span>
+<span class="sd">            })</span>
+
+<span class="sd">            # Adding duplicates to the original dataframe</span>
+<span class="sd">            df = pd.concat([df, duplicates, duplicates])  # Adding twice for multiple duplicates</span>
+
+<span class="sd">            # Shuffling the dataframe to mix duplicates</span>
+<span class="sd">            df = df.sample(frac=1).reset_index(drop=True)</span>
+
+<span class="sd">            # Return all the duplicated values</span>
+<span class="sd">            CleanData.find_treat_duplicates.FindTreatDuplicates.find_duplicates(df, subset=&#39;id&#39;)</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">data</span><span class="p">[</span><span class="n">data</span><span class="o">.</span><span class="n">duplicated</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="n">subset</span><span class="p">,</span> <span class="n">keep</span><span class="o">=</span><span class="n">identify_all</span><span class="p">)]</span>            </div>
     
@@ -136,10 +171,45 @@
 <div class="viewcode-block" id="FindTreatDuplicates.drop_duplicates"><a class="viewcode-back" href="../../CleanData.html#CleanData.find_treat_duplicates.FindTreatDuplicates.drop_duplicates">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">drop_duplicates</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">subset</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">identify_all</span><span class="o">=</span><span class="s1">&#39;first&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Drop duplicated values in DataFrame. </span>
-<span class="sd">        Args:</span>
-<span class="sd">            data (pd.DataFrame): pd.DataFrame</span>
-<span class="sd">            subset (list | pd.Series): A list of features OR a singular searies. Default = None (applies to all features).</span>
-<span class="sd">            identify_all (bool, optional): Defaults to &#39;first&#39; (drop all duplicated values but keep the &#39;first&#39; instances); If &#39;last&#39; return only the last instances of the duplicated values; If False = drop all duplicates.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            - data (pd.DataFrame): pd.DataFrame</span>
+<span class="sd">            - subset (list | pd.Series): A list of features OR a singular searies. Default = None (applies to all features).</span>
+<span class="sd">            - identify_all (bool, optional): Defaults to &#39;first&#39; (drop all duplicated values but keep the &#39;first&#39; instances); If &#39;last&#39; return only the last instances of the duplicated values; If False = drop all duplicates.</span>
+<span class="sd">        </span>
+<span class="sd">        Example usage:</span>
+<span class="sd">        --------------</span>
+<span class="sd">        .. code-block:: python</span>
+
+<span class="sd">            # Seed for reproducibility</span>
+<span class="sd">            np.random.seed(0)</span>
+
+<span class="sd">            # Sample data generation</span>
+<span class="sd">            data = {</span>
+<span class="sd">                &#39;id&#39;: np.arange(1, 51),</span>
+<span class="sd">                &#39;name&#39;: np.random.choice([&#39;John&#39;, &#39;Jane&#39;, &#39;Doe&#39;, &#39;Emily&#39;, &#39;Michael&#39;], 50),</span>
+<span class="sd">                &#39;age&#39;: np.random.randint(18, 60, size=50),</span>
+<span class="sd">                &#39;city&#39;: np.random.choice([&#39;New York&#39;, &#39;Los Angeles&#39;, &#39;Chicago&#39;, &#39;Houston&#39;, &#39;Phoenix&#39;], 50)</span>
+<span class="sd">            }</span>
+
+<span class="sd">            df = pd.DataFrame(data)</span>
+
+<span class="sd">            # Introducing duplicates</span>
+<span class="sd">            duplicates = pd.DataFrame({</span>
+<span class="sd">                &#39;id&#39;: [51, 52, 53, 54, 55],  # New IDs to avoid confusion with the unique identifier intention</span>
+<span class="sd">                &#39;name&#39;: [&#39;John&#39;, &#39;Jane&#39;, &#39;Doe&#39;, &#39;Emily&#39;, &#39;Michael&#39;],</span>
+<span class="sd">                &#39;age&#39;: [25, 30, 45, 22, 35],</span>
+<span class="sd">                &#39;city&#39;: [&#39;New York&#39;, &#39;Los Angeles&#39;, &#39;Chicago&#39;, &#39;Houston&#39;, &#39;Phoenix&#39;]</span>
+<span class="sd">            })</span>
+
+<span class="sd">            # Adding duplicates to the original dataframe</span>
+<span class="sd">            df = pd.concat([df, duplicates, duplicates])  # Adding twice for multiple duplicates</span>
+
+<span class="sd">            # Shuffling the dataframe to mix duplicates</span>
+<span class="sd">            df = df.sample(frac=1).reset_index(drop=True)</span>
+
+<span class="sd">            # Return all the duplicated values</span>
+<span class="sd">            CleanData.find_treat_duplicates.FindTreatDuplicates.drop_duplicates(df, subset=&#39;id&#39;)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">data</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="n">subset</span><span class="p">,</span> <span class="n">keep</span><span class="o">=</span><span class="n">identify_all</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>       </div></div>
 </pre></div>

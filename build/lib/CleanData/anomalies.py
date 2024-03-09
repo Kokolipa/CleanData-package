@@ -32,6 +32,66 @@ class Anomalies:
 
         Returns:
             pd.DataFrame: DataFrame containing anomalies based on specified identification criteria.
+        
+        Example usage:
+        --------------
+        .. code-block:: python
+            
+            # Import dependencies
+            import pandas as pd
+            import numpy as np
+            from datetime import timedelta, date
+            import CleanData
+
+            # Function to generate daily dates except for anomalies
+            def create_date_dataset(start_date, end_date, anomaly_month_year, missing_months_year):
+                current_date = start_date
+                dates = []
+
+                while current_date <= end_date:
+                    current_month_year = (current_date.month, current_date.year)
+
+                    # Skip dates for the anomaly month (less than 28 days)
+                    if current_month_year == anomaly_month_year:
+                        if len(dates) % 29 != 0:  # Ensuring this month has fewer than 28 records
+                            dates.append(current_date)
+                        current_date += timedelta(days=2)  # Skipping days to ensure less than 28 records
+                    # Skip entire months for the missing months in the specified year
+                    elif current_month_year[1] == missing_months_year and current_month_year[0] in [2, 3]:
+                        current_date += timedelta(days=1)  # Move to the next day to check for month increment
+                        if current_date.month in [2, 3]:  # If still in the missing month, skip to next month
+                            continue
+                    else:
+                        dates.append(current_date)
+                        current_date += timedelta(days=1)
+
+                return dates
+
+                # Define the start and end dates for the dataset
+                start_date = date(2022, 1, 1)
+                end_date = date(2023, 12, 31)
+
+                # Specify the anomaly month/year and the year with missing months
+                anomaly_month_year = (4, 2022)  # April 2022 will have less than 28 records
+                missing_months_year = 2023  # February and March 2023 will be missing
+
+                # Generate the dataset
+                dates = create_date_dataset(start_date, end_date, anomaly_month_year, missing_months_year)
+
+                # Create a DataFrame
+                df = pd.DataFrame(dates, columns=['Date'])
+
+                # Display the first few rows of the DataFrame to confirm
+                df['Date'] = pd.to_datetime(df['Date'], errors='coerce', infer_datetime_format=True)
+
+                df['month'] = df['Date'].dt.month
+                df['year'] = df['Date'].dt.year
+                test = df.groupby(['year','month']).size().reset_index(name="days_count")
+
+                year_count = test.groupby('year')["days_count"].sum()
+
+                CleanData.anomalies.Anomalies.find_date_anomalies(df, date_column='Date', identify_by='month')
+
         """   
 
         if identify_by == 'month':
@@ -73,6 +133,38 @@ class Anomalies:
 
         Returns:
             pd.DataFrame: DataFrame of outliers.
+        
+        Example usage:
+        --------------
+        .. code-block:: python
+        
+            # Note: The application of this function is similar to the linear outliers function
+
+            # Import dependencies
+            import numpy as np
+            import pandas as pd
+            import CleanData
+
+
+            # Set random seed for reproducibility
+            np.random.seed(42)
+
+            # Generate a fake dataset with 100 samples and 3 features
+            n_samples = 1000
+            n_features = 5
+
+            # Generate random data for the features
+            X = np.random.rand(n_samples, n_features)
+
+            # Generate random outliers by adding noise to the data
+            outliers_indices = np.random.choice(n_samples, 5, replace=False)  # Select 5 random indices as outliers
+            X[outliers_indices] += 10  # Add noise to create outliers
+
+            # Create Dataframe
+            df = pd.DataFrame(X, columns=['Column' + ' ' + str(i) for i in range(1, n_features+1, 1)])
+
+            # Identify outliers influencers from your dataset
+            CleanData.anomalies.Anomalies.nonlinear_outliers_influencers_knn(df, df.columns.to_list())
         """    
         
         if contamination == 'auto': 
@@ -176,6 +268,36 @@ class Anomalies:
 
         Returns:
             pd.DataFrame: DataFrame of outliers.
+        
+        Example usage:
+        --------------
+        .. code-block:: python
+
+            # Import dependencies
+            import numpy as np
+            import pandas as pd
+            import CleanData
+
+
+            # Set random seed for reproducibility
+            np.random.seed(42)
+
+            # Generate a fake dataset with 100 samples and 3 features
+            n_samples = 1000
+            n_features = 5
+
+            # Generate random data for the features
+            X = np.random.rand(n_samples, n_features)
+
+            # Generate random outliers by adding noise to the data
+            outliers_indices = np.random.choice(n_samples, 5, replace=False)  # Select 5 random indices as outliers
+            X[outliers_indices] += 10  # Add noise to create outliers
+
+            # Create Dataframe
+            df = pd.DataFrame(X, columns=['Column' + ' ' + str(i) for i in range(1, n_features+1, 1)])
+
+            # Identify outliers influencers from your dataset
+            CleanData.anomalies.Anomalies.linear_outliers_influencers(df, df.columns.to_list())
         """            
         
         # Calculate the mean and standard deviation of features

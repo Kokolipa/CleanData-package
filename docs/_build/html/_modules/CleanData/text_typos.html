@@ -58,7 +58,6 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../modules.html">CleanData-package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../CleanData.html">CleanData package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../setup.html">setup module</a></li>
 </ul>
 </li>
 </ul>
@@ -127,11 +126,41 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Strip whitespace and convert strings to lowercase in DataFrame.</span>
 
-<span class="sd">        Args:</span>
-<span class="sd">            data (pd.DataFrame): Input DataFrame containing string columns.</span>
+<span class="sd">        Parameters:</span>
+<span class="sd">            - data (pd.DataFrame): Input DataFrame containing string columns.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            pd.DataFrame: DataFrame with strings stripped of leading/trailing whitespace and converted to lowercase.</span>
+<span class="sd">        </span>
+<span class="sd">        Example usage:</span>
+<span class="sd">        --------------</span>
+<span class="sd">        .. code-block:: python</span>
+
+<span class="sd">            # Import dependencies</span>
+<span class="sd">            import pandas as pd</span>
+<span class="sd">            import CleanData</span>
+
+<span class="sd">            # sample data</span>
+<span class="sd">            data = {</span>
+<span class="sd">                &#39;Text&#39;: [</span>
+<span class="sd">                    &quot;    The quck brown fox jumps over the lazy dog.&quot;,</span>
+<span class="sd">                    &quot;She is an engeneer and work in a tech company.&quot;,</span>
+<span class="sd">                    &quot;I&#39;m goign to the beech this weekend.&quot;,</span>
+<span class="sd">                    &quot;    His favorit! color is purpel.&quot;,</span>
+<span class="sd">                    &quot;The concert was amazig, I reccomend it to everyone.&quot;,</span>
+<span class="sd">                    &quot;    The resturant was ful of delicius food.&quot;,</span>
+<span class="sd">                    &quot;I have an appoitment with the docter tomorrow.&quot;,</span>
+<span class="sd">                    &quot;The weathr is nice today, let&#39;s go for a picnick.&quot;,</span>
+<span class="sd">                    &quot;   I&#39;m intersted in biologgy and study it at the univeristy.&quot;,</span>
+<span class="sd">                    &quot;He&#39;s a talanted musitian and plays the gitar very well.&quot;</span>
+<span class="sd">                ]</span>
+<span class="sd">            }</span>
+
+<span class="sd">            # Create DataFrame</span>
+<span class="sd">            occupation_df_eval = pd.DataFrame(data)</span>
+
+<span class="sd">            # Lower case the data &amp; strip whitespaces</span>
+<span class="sd">            CleanData.text_typos.TextTypos.strip_and_lower_strings(occupation_df_eval).values</span>
 <span class="sd">        &quot;&quot;&quot;</span>   
         <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">select_dtypes</span><span class="p">(</span><span class="n">exclude</span><span class="o">=</span><span class="s2">&quot;number&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
             <span class="n">data</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
@@ -146,12 +175,33 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Convert specified columns from object type to numeric type.</span>
 
-<span class="sd">        Args:</span>
-<span class="sd">            df (pd.DataFrame): Input DataFrame containing columns to be converted.</span>
-<span class="sd">            features (list): List of column names to be converted to numeric type.</span>
+<span class="sd">        Parameters:</span>
+<span class="sd">            - df (pd.DataFrame): Input DataFrame containing columns to be converted.</span>
+<span class="sd">            - features (list): List of column names to be converted to numeric type.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            pd.DataFrame: DataFrame with specified columns converted to numeric type.</span>
+<span class="sd">        </span>
+<span class="sd">        Example usage: </span>
+<span class="sd">        --------------</span>
+<span class="sd">        .. code-block:: python</span>
+
+<span class="sd">            # Import dependencies</span>
+<span class="sd">            import numpy as np</span>
+<span class="sd">            import pandas as pd</span>
+<span class="sd">            import CleanData</span>
+
+<span class="sd">            # Create a DataFrame</span>
+<span class="sd">            s1 = pd.DataFrame(np.arange(1, 20, 1))</span>
+
+<span class="sd">            # Enforce string values in the DataFrame columns </span>
+<span class="sd">            s1.iloc[15] = &#39;test&#39;</span>
+<span class="sd">            s1[1] = s1</span>
+
+<span class="sd">            # Trasform the DataFrame columns back to numerical values</span>
+<span class="sd">            CleanData.TextTypos.object_to_numeric(s1, [0, 1])</span>
+
+<span class="sd">            s1</span>
 <span class="sd">        &quot;&quot;&quot;</span>       
 
         <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">df</span><span class="p">[</span><span class="n">features</span><span class="p">]</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
@@ -164,11 +214,63 @@
     <span class="k">def</span> <span class="nf">correct_word</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">word</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Correct spelling of a word using SpellChecker.</span>
 
-<span class="sd">        Args:</span>
-<span class="sd">            word (str): Input word to be corrected.</span>
+<span class="sd">        Parameters:</span>
+<span class="sd">            - word (str): Input word to be corrected.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            str: Corrected version of the input word.</span>
+<span class="sd">        </span>
+<span class="sd">        Example usage:</span>
+<span class="sd">        ---------------</span>
+<span class="sd">        .. code-block:: python</span>
+<span class="sd">        </span>
+<span class="sd">            # Import dependencies</span>
+<span class="sd">            import pandas as pd</span>
+<span class="sd">            import random</span>
+
+<span class="sd">            # List of occupations with intentional typos</span>
+<span class="sd">            occupations_with_typos = [</span>
+<span class="sd">                &quot;Docter&quot;,</span>
+<span class="sd">                &quot;Engeneer&quot;,</span>
+<span class="sd">                &quot;Progrmmer&quot;,</span>
+<span class="sd">                &quot;Teahcer&quot;,</span>
+<span class="sd">                &quot;Dentest&quot;,</span>
+<span class="sd">                &quot;Writter&quot;,</span>
+<span class="sd">                &quot;Nurse&quot;,</span>
+<span class="sd">                &quot;Actrress&quot;,</span>
+<span class="sd">                &quot;Pilot&quot;,</span>
+<span class="sd">                &quot;Surgeon&quot;</span>
+<span class="sd">            ]</span>
+
+<span class="sd">            # List of correct occupations</span>
+<span class="sd">            correct_occupations = [</span>
+<span class="sd">                &quot;Doctor&quot;,</span>
+<span class="sd">                &quot;Engineer&quot;,</span>
+<span class="sd">                &quot;Programmer&quot;,</span>
+<span class="sd">                &quot;Teacher&quot;,</span>
+<span class="sd">                &quot;Dentist&quot;,</span>
+<span class="sd">                &quot;Writer&quot;,</span>
+<span class="sd">                &quot;Nurse&quot;,</span>
+<span class="sd">                &quot;Actress&quot;,</span>
+<span class="sd">                &quot;Pilot&quot;,</span>
+<span class="sd">                &quot;Surgeon&quot;</span>
+<span class="sd">            ]</span>
+
+<span class="sd">            # Generate a dataframe with 100 records</span>
+<span class="sd">            occupation_df_typos = pd.DataFrame({&#39;Occupation&#39;: [random.choice(occupations_with_typos) for _ in range(100)]})</span>
+<span class="sd">            occupation_df_correct = pd.DataFrame({&#39;Occupation&#39;: [random.choice(correct_occupations) for _ in range(100)]})</span>
+
+<span class="sd">            # Concatenate the dataframes</span>
+<span class="sd">            occupation_df = pd.concat([occupation_df_typos, occupation_df_correct], ignore_index=True)</span>
+
+<span class="sd">            # Display the dataframe</span>
+<span class="sd">            occupation_df = occupation_df.sample(frac=1)</span>
+
+<span class="sd">            # Apply correction to the entire dataframe</span>
+<span class="sd">            corrected_df = occupation_df.applymap(CleanData.text_typos.TextTypos.correct_word)</span>
+
+<span class="sd">            corrected_df</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>    
         <span class="n">spell</span> <span class="o">=</span> <span class="n">SpellChecker</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">spell</span><span class="o">.</span><span class="n">correction</span><span class="p">(</span><span class="n">word</span><span class="p">)</span></div>
@@ -179,11 +281,43 @@
     <span class="k">def</span> <span class="nf">correct_sentence</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">strings</span><span class="p">:</span><span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Correct spelling in a sentence using SpellChecker.</span>
 
-<span class="sd">        Args:</span>
-<span class="sd">            strings (str): Input sentence to be corrected.</span>
+<span class="sd">        Parameters:</span>
+<span class="sd">            - strings (str): Input sentence to be corrected.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            str: Corrected version of the input sentence.</span>
+<span class="sd">        </span>
+<span class="sd">        Example usage:</span>
+<span class="sd">        ---------------</span>
+<span class="sd">        ..  code-block:: python</span>
+
+<span class="sd">            # Import dependencies</span>
+<span class="sd">            import pandas as pd</span>
+<span class="sd">            import CleanData</span>
+
+<span class="sd">            # sample data</span>
+<span class="sd">            data = {</span>
+<span class="sd">                &#39;Text&#39;: [</span>
+<span class="sd">                    &quot;The brown fox jumps over the lazy dog.&quot;,</span>
+<span class="sd">                    &quot;She is an engeneer and work in a tech company.&quot;,</span>
+<span class="sd">                    &quot;I&#39;m goign to the beech this weekend.&quot;,</span>
+<span class="sd">                    &quot;His favorit! color is purpel.&quot;,</span>
+<span class="sd">                    &quot;The concert was amazig, I reccomend it to everyone.&quot;,</span>
+<span class="sd">                    &quot;The resturant was ful of delicius food.&quot;,</span>
+<span class="sd">                    &quot;I have an appoitment with the docter tomorrow.&quot;,</span>
+<span class="sd">                    &quot;The weathr is nice today, let&#39;s go for a picnick.&quot;,</span>
+<span class="sd">                    &quot;I&#39;m intersted in biologgy and study it at the univeristy.&quot;,</span>
+<span class="sd">                    &quot;He&#39;s a talanted musitian and plays the gitar very well.&quot;</span>
+<span class="sd">                ]</span>
+<span class="sd">            }</span>
+
+<span class="sd">            # Create DataFrame</span>
+<span class="sd">            occupation_df_eval = pd.DataFrame(data)</span>
+
+<span class="sd">            # Correct the text typos</span>
+<span class="sd">            occupation_df_eval[&#39;Text&#39;] = occupation_df_eval[&#39;Text&#39;].apply(CleanData.text_typos.TextTypos.correct_sentence)</span>
+
+<span class="sd">            occupation_df_eval</span>
 <span class="sd">        &quot;&quot;&quot;</span>     
         <span class="n">words</span> <span class="o">=</span> <span class="n">strings</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span>  <span class="c1"># Split the string into words</span>
         <span class="n">corrected_words</span> <span class="o">=</span> <span class="p">[</span><span class="bp">cls</span><span class="o">.</span><span class="n">correct_word</span><span class="p">(</span><span class="n">word</span><span class="p">)</span> <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">words</span><span class="p">]</span>  <span class="c1"># Apply correction to each word</span>

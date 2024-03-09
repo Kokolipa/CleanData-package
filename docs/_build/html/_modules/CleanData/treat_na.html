@@ -58,7 +58,6 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../modules.html">CleanData-package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../CleanData.html">CleanData package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../setup.html">setup module</a></li>
 </ul>
 </li>
 </ul>
@@ -134,11 +133,27 @@
     <span class="k">def</span> <span class="nf">IdentifyNAs</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Identify rows containing missing values in a DataFrame.</span>
 
-<span class="sd">        Args:</span>
-<span class="sd">            data (pd.DataFrame): Input DataFrame to search for missing values.</span>
+<span class="sd">        Parameters:</span>
+<span class="sd">            - data (pd.DataFrame): Input DataFrame to search for missing values.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            pd.DataFrame: DataFrame containing rows with missing values.</span>
+<span class="sd">        </span>
+<span class="sd">        Example usage:</span>
+<span class="sd">        --------------</span>
+<span class="sd">        .. code-block:: python</span>
+
+<span class="sd">            import pandas as pd</span>
+<span class="sd">            import CleanData</span>
+
+<span class="sd">            # Create a sample DataFrame</span>
+<span class="sd">            data = pd.DataFrame({</span>
+<span class="sd">                &#39;Column1&#39;: [1, 2, pd.NA, 4, 5],</span>
+<span class="sd">                &#39;Column2&#39;: [&#39;apple&#39;, &#39;banana&#39;, &#39;null&#39;, &#39;orange&#39;, &#39;&#39;],</span>
+<span class="sd">                &#39;Column3&#39;: [&#39;cat&#39;, &#39;dog&#39;, &#39;missing&#39;, &#39;&#39;, &#39;empty&#39;]</span>
+<span class="sd">            })</span>
+
+<span class="sd">            CleanData.TreatNA.IdentifyNAs(data)</span>
 <span class="sd">        &quot;&quot;&quot;</span>       
         <span class="n">missing_values</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="s1">&#39;missing&#39;</span><span class="p">,</span> <span class="s1">&#39;null&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;empty&#39;</span><span class="p">]</span>
         <span class="c1"># Find rows containing any of the missing values</span>
@@ -155,11 +170,32 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Filter DataFrame to retain rows with complete case or edge case missing values.</span>
 
-<span class="sd">        Args:</span>
-<span class="sd">            data (pd.DataFrame): Input DataFrame containing potentially incomplete rows.</span>
+<span class="sd">        Parameters:</span>
+<span class="sd">            - data (pd.DataFrame): Input DataFrame containing potentially incomplete rows.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            pd.DataFrame: DataFrame with rows containing complete case or edge case missing values.</span>
+<span class="sd">        </span>
+<span class="sd">        Example usage:</span>
+<span class="sd">        --------------</span>
+
+<span class="sd">        .. code-block:: python</span>
+
+<span class="sd">            # Import Dependencies</span>
+<span class="sd">            import CleanData</span>
+<span class="sd">            import numpy as np</span>
+<span class="sd">            import pandas as pd</span>
+
+<span class="sd">            # Creating a DataFrame</span>
+<span class="sd">            data = pd.DataFrame({</span>
+<span class="sd">                &#39;A&#39;: [1, &#39;missing&#39;, np.nan, 4, 5],</span>
+<span class="sd">                &#39;B&#39;: [&#39;apple&#39;, &#39;banana&#39;, &#39;null&#39;, &#39;orange&#39;, &#39;&#39;],</span>
+<span class="sd">                &#39;C&#39;: [&#39;cat&#39;, &#39;dog&#39;, &#39;elephant&#39;, &#39;&#39;, &#39;empty&#39;]</span>
+<span class="sd">            })</span>
+
+<span class="sd">            # Explore complete case na instances</span>
+<span class="sd">            CleanData.TreatNA.complete_case_na(data)</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>     
         <span class="c1"># Include edge cases</span>
         <span class="n">missing_values</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;missing&#39;</span><span class="p">,</span> <span class="s1">&#39;null&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;empty&#39;</span><span class="p">]</span>
@@ -174,14 +210,50 @@
     <span class="c1">#* (3) Method </span>
 <div class="viewcode-block" id="TreatNA.drop_complete_case_na"><a class="viewcode-back" href="../../CleanData.html#CleanData.treat_na.TreatNA.drop_complete_case_na">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">drop_complete_case_na</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Drop rows with complete case missing values from a DataFrame.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Drop rows with complete case missing values from a DataFrame.</span>
 
-<span class="sd">        Args:</span>
-<span class="sd">            data (pd.DataFrame): Input DataFrame containing potentially incomplete rows.</span>
+<span class="sd">        Parameters:</span>
+<span class="sd">            - data : pd.DataFrame Input DataFrame containing potentially incomplete rows.</span>
 
-<span class="sd">        Returns:</span>
-<span class="sd">            pd.DataFrame: DataFrame with complete case rows retained.</span>
-<span class="sd">        &quot;&quot;&quot;</span>    
+<span class="sd">        Returns: </span>
+<span class="sd">            pd.DataFrame with complete case rows retained.</span>
+
+<span class="sd">        Example Usage:</span>
+<span class="sd">        ---------------</span>
+
+<span class="sd">        .. code-block:: python</span>
+
+<span class="sd">            # Import Dependencies</span>
+<span class="sd">            import CleanData</span>
+<span class="sd">            import numpy as np</span>
+<span class="sd">            import pandas as pd</span>
+
+<span class="sd">            # Sample data</span>
+<span class="sd">            data = {</span>
+<span class="sd">                &#39;Column1&#39;: np.random.randint(0, 100, 50),</span>
+<span class="sd">                &#39;Column2&#39;: np.random.choice([&#39;A&#39;, &#39;B&#39;, &#39;C&#39;], 50),</span>
+<span class="sd">                &#39;Column3&#39;: np.random.rand(50)</span>
+<span class="sd">            }</span>
+
+<span class="sd">            # Convert to DataFrame</span>
+<span class="sd">            df = pd.DataFrame(data)</span>
+
+<span class="sd">            # Set 10 random rows to NA</span>
+<span class="sd">            rows_to_nan = np.random.choice(df.index, 10, replace=False)</span>
+<span class="sd">            df.loc[rows_to_nan, :] = np.nan</span>
+
+<span class="sd">            # Add full records with specified values</span>
+<span class="sd">            missing_values = [&#39;missing&#39;, &#39;null&#39;, &#39;&#39;, &#39;empty&#39;]</span>
+<span class="sd">            for value in missing_values:</span>
+<span class="sd">                df.loc[len(df)] = [value] * len(df.columns)</span>
+
+<span class="sd">            # Drop rows with complete cases containing missing values</span>
+<span class="sd">            cleaned_data = CleanData.TreatNA.drop_complete_case_na(df)</span>
+
+<span class="sd">            print(cleaned_data)</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Identify rows to drop and return the corresponding index value</span>
         <span class="n">missing_values</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;missing&#39;</span><span class="p">,</span> <span class="s1">&#39;null&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;empty&#39;</span><span class="p">]</span>
         <span class="n">rows_to_drop</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">data</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">row</span><span class="p">:</span> <span class="nb">any</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">isna</span><span class="p">(</span><span class="n">val</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">str</span><span class="p">(</span><span class="n">val</span><span class="p">)</span> <span class="ow">in</span> <span class="n">missing_values</span> <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">row</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)]</span><span class="o">.</span><span class="n">index</span>
@@ -199,7 +271,7 @@
     <span class="k">def</span> <span class="nf">DataImpute</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">features</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">missing_values</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">numeric_strategy</span><span class="o">=</span><span class="s1">&#39;mean&#39;</span><span class="p">,</span> <span class="n">string_strategy</span><span class="o">=</span><span class="s1">&#39;constant&#39;</span><span class="p">,</span> <span class="n">string_fill_value</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Apply univariate data imputation for numerical &amp; categorical strategies. Suitable for MCAR cases (A variable is missing completely at random (MCAR) if the probability of being missing is the same for all the observations)</span>
 
-<span class="sd">        Args:</span>
+<span class="sd">        Parameters:</span>
 <span class="sd">            - data (pd.DataFrame)</span>
 <span class="sd">            - features (list)</span>
 <span class="sd">            - missing_values (the placeholder for the missing values): **Defaults to np.nan;  Can also be pd.NA, int, float,  or str. </span>
@@ -209,7 +281,31 @@
 
 <span class="sd">        Returns:</span>
 <span class="sd">            _type_: pd.DataFrame</span>
-<span class="sd">        &quot;&quot;&quot;</span>            
+
+<span class="sd">        Example usage: </span>
+<span class="sd">        --------------</span>
+<span class="sd">        .. code-block:: python</span>
+
+<span class="sd">            # Import Dependencies</span>
+<span class="sd">            import pandas as pd</span>
+<span class="sd">            import numpy as np</span>
+<span class="sd">            import CleanData</span>
+
+<span class="sd">            # Create sample DataFrame</span>
+<span class="sd">            data = pd.DataFrame({</span>
+<span class="sd">                &#39;A&#39;: [1, np.nan, 3, 4, 5],</span>
+<span class="sd">                &#39;B&#39;: [&#39; apple&#39;, &#39; banana&#39;, np.nan, &#39;orange&#39;, &#39;&#39;],</span>
+<span class="sd">                &#39;C&#39;: [&#39;cat&#39;, &#39;dog&#39;, &#39;elephant&#39;, np.nan, &#39;&#39;],</span>
+<span class="sd">            })</span>
+
+<span class="sd">            # Create a list containing the features to impute the data </span>
+<span class="sd">            features = [&#39;A&#39;, &#39;B&#39;, &#39;C&#39;]</span>
+
+<span class="sd">            # Apply Data Impute on the dataset -&gt; here&#39;s how you can impute data both for numeric and categorical features</span>
+<span class="sd">            CleanData.TreatNA.DataImpute(data, features, numeric_strategy=&#39;mean&#39;, string_strategy=&#39;constant&#39;, string_fill_value=&#39;unknown&#39;)</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>     
+
         <span class="n">imputed_data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
         <span class="n">numeric_features</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">select_dtypes</span><span class="p">(</span><span class="n">include</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">number</span><span class="p">)</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
         <span class="n">string_features</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">select_dtypes</span><span class="p">(</span><span class="n">include</span><span class="o">=</span><span class="nb">object</span><span class="p">)</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
@@ -236,11 +332,35 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Missing of values is not at random (MNAR) if their being missing depends on information not recorded in the dataset. Transaction dataset = the values are missing if if we don&#39;t have transaction_number (NOTE: here we could have more the one independent variable)</span>
 <span class="sd">        NOTE: **Independent = transaction_number; **dependent (in their occurance): the rest of the variables</span>
 
-<span class="sd">        Args:</span>
-<span class="sd">            data (_type_): pd.DataFrame / np.array (2d array)</span>
+<span class="sd">        Parameters:</span>
+<span class="sd">            - data (_type_): pd.DataFrame / np.array (2d array)</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            pd.DataFrame: This function will drop all corresponsing NA values from the dependent variables based on the Independent variable/s</span>
+<span class="sd">        </span>
+<span class="sd">        Example Usage:</span>
+<span class="sd">        --------------</span>
+
+<span class="sd">        .. code-block:: python</span>
+
+<span class="sd">            # Import Dependencies</span>
+<span class="sd">            import CleanData</span>
+<span class="sd">            import numpy as np</span>
+<span class="sd">            import pandas as pd</span>
+
+<span class="sd">            # Sample data</span>
+<span class="sd">            df = pd.DataFrame({</span>
+<span class="sd">                &quot;CID&quot;: np.arange(1, 20),</span>
+<span class="sd">                &quot;transaction_number&quot;: np.linspace(0, 1, 19),</span>
+<span class="sd">                &quot;Column3&quot;: [np.nan for _ in range(1, 20)],</span>
+<span class="sd">                &quot;Column4&quot;: [np.nan for _ in range(1, 20)]</span>
+<span class="sd">            })</span>
+<span class="sd">            df[&quot;transaction_number&quot;].iloc[:5] = np.nan</span>
+<span class="sd">            df[&quot;Column3&quot;].iloc[5:] = df[&quot;CID&quot;].mean()</span>
+<span class="sd">            df[&quot;Column4&quot;].iloc[5:] = df[&quot;CID&quot;].mean()</span>
+
+<span class="sd">            df</span>
+<span class="sd">            CleanData.TreatNA.MNAR(df, [&quot;transaction_number&quot;, &quot;Column3&quot;, &quot;Column4&quot;])</span>
 <span class="sd">        &quot;&quot;&quot;</span>            
         <span class="k">return</span> <span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">features</span><span class="p">]</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span></div>
     
@@ -256,15 +376,42 @@
 
 <span class="sd">        This method aims to detect Missing at Random (MAR) instances within a dataset, where the occurrence of missing values systematically relates to observed data. It employs logistic regression to identify columns with missing values and returns the largest coefficients associated with each feature.</span>
 
-<span class="sd">        Args:</span>
-<span class="sd">            df (pd.DataFrame): Input Pandas DataFrame containing data with missing values.</span>
-<span class="sd">            max_iter (int, optional): Maximum number of iterations for logistic regression convergence. Defaults to 1000.</span>
+<span class="sd">        Parameters:</span>
+<span class="sd">            - df (pd.DataFrame): Input Pandas DataFrame containing data with missing values.</span>
+<span class="sd">            - max_iter (int, optional): Maximum number of iterations for logistic regression convergence. Defaults to 1000.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            pd.DataFrame: DataFrame containing information about the largest coefficients of features obtained from logistic regression.</span>
 <span class="sd">            </span>
 <span class="sd">        Raises:</span>
 <span class="sd">            ValueError: If fitting the logistic regression model encounters an issue.</span>
+<span class="sd">        </span>
+<span class="sd">        Example usage:</span>
+<span class="sd">        --------------</span>
+<span class="sd">        .. code-block:: python</span>
+<span class="sd">            </span>
+<span class="sd">            # Import dependencies</span>
+<span class="sd">            import pandas as pd</span>
+<span class="sd">            import numpy as np</span>
+<span class="sd">            import CleanData</span>
+<span class="sd">            </span>
+<span class="sd">            # Sample Data Creation</span>
+<span class="sd">            np.random.seed(42)  # For reproducible results</span>
+<span class="sd">            data = {</span>
+<span class="sd">                &#39;Age&#39;: np.random.randint(20, 60, 100),</span>
+<span class="sd">                &#39;Income&#39;: np.random.randint(5000, 20000, 100),</span>
+<span class="sd">                &#39;Gender&#39;: np.random.choice([&#39;Male&#39;, &#39;Female&#39;], 100),</span>
+<span class="sd">                &#39;Has_Car&#39;: np.random.choice([0, 1], 100)</span>
+<span class="sd">            }</span>
+
+<span class="sd">            # Create the DataFrame</span>
+<span class="sd">            df = pd.DataFrame(data)</span>
+
+<span class="sd">            # Create a MAR case </span>
+<span class="sd">            df.loc[df[&quot;Gender&quot;] == &quot;Male&quot;, &quot;Has_Car&quot;] = np.nan</span>
+
+<span class="sd">            @ Leverage the logistic regression MAR identifier</span>
+<span class="sd">            CleanData.TreatNA.logistic_regression_MAR_identifier(df).sort_values(by=&quot;Coefficient&quot;, ascending=False)</span>
 <span class="sd">        &quot;&quot;&quot;</span>    
         <span class="c1"># Identify columns containing NA/NaN values</span>
         <span class="n">columns_with_na</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span><span class="o">.</span><span class="n">any</span><span class="p">()]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
