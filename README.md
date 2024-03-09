@@ -13,7 +13,7 @@ Cleandata is an easy to use Python library for data cleansing operations with th
 3. Treating and dropping duplicated values.
 4. Using scientific methods to treat anomalies.
 5. Treating text typos.
-6. Using AI state-of-the-art models for Table Question Answering purposes.
+6. Using AI state-of-the-art models (**TAPAS**) for Table Question Answering purposes to enhance the workflow and reduce the overall time consumption for data exploration.
 
 
 
@@ -27,39 +27,14 @@ Cleandata is an easy to use Python library for data cleansing operations with th
 - [Documentation](#documentation)
 
 
-## Main Features
-Here are just a few of the things that pandas does well:
-
-  - Easy handling of [**missing data**][missing-data] (represented as
-    `NaN`, `NA`, or `NaT`) in floating point as well as non-floating point data
-  - Size mutability: columns can be [**inserted and
-    deleted**][insertion-deletion] from DataFrame and higher dimensional
-    objects
-  - Automatic and explicit [**data alignment**][alignment]: objects can
-    be explicitly aligned to a set of labels, or the user can simply
-    ignore the labels and let `Series`, `DataFrame`, etc. automatically
-    align the data for you in computations
-  - Powerful, flexible [**group by**][groupby] functionality to perform
-    split-apply-combine operations on data sets, for both aggregating
-    and transforming data
-  - Make it [**easy to convert**][conversion] ragged,
-    differently-indexed data in other Python and NumPy data structures
-    into DataFrame objects
-  - Intelligent label-based [**slicing**][slicing], [**fancy
-    indexing**][fancy-indexing], and [**subsetting**][subsetting] of
-    large data sets
-  - Intuitive [**merging**][merging] and [**joining**][joining] data
-    sets
-  - Flexible [**reshaping**][reshape] and [**pivoting**][pivot-table] of
-    data sets
-  - [**Hierarchical**][mi] labeling of axes (possible to have multiple
-    labels per tick)
-  - Robust IO tools for loading data from [**flat files**][flat-files]
-    (CSV and delimited), [**Excel files**][excel], [**databases**][db],
-    and saving/loading data from the ultrafast [**HDF5 format**][hdfstore]
-  - [**Time series**][timeseries]-specific functionality: date range
-    generation and frequency conversion, moving window statistics,
-    date shifting and lagging
+## Features Included
+Expand each of the following modules => 
+- Memory module: 
+- Treat_NA mudole:
+- find_treat_duplicates module:
+- TextTypos module:
+- Anomalies module:
+- QA module 
 
 
 ## Where to get it
