@@ -25,10 +25,10 @@ class Anomalies:
     def find_date_anomalies(cls, data:pd.DataFrame, date_column: str, identify_by='month'):
         """Find anomalies in date data.
 
-        Args:
-            data (pd.DataFrame): DataFrame containing date information.
-            date_column (str): Name of the column containing date data.
-            identify_by (str, optional): Identifier for type of anomaly to find ('month' or 'year'). Defaults to 'month'.
+        Parameters:
+            - data (pd.DataFrame): DataFrame containing date information.
+            - date_column (str): Name of the column containing date data.
+            - identify_by (str, optional): Identifier for type of anomaly to find ('month' or 'year'). Defaults to 'month'.
 
         Returns:
             pd.DataFrame: DataFrame containing anomalies based on specified identification criteria.
@@ -124,12 +124,12 @@ class Anomalies:
     def nonlinear_outliers_influencers_knn(cls, data: pd.DataFrame, features: list, neighbors_fraction: float = 0.1, contamination='auto', center_measure='mean'):
         """Detects outliers in a dataset based on nonlinear methods and KNN.
 
-        Args:
-            data (pd.DataFrame): The dataset to analyze.
-            features (list): List of features to consider for outlier detection.
-            neighbors_fraction (float, optional): Fraction of dataset size to use as neighbors. Defaults to 0.1.
-            contamination (str, optional): Method for calculating contamination ('auto', '3std'). Defaults to 'auto'.
-            center_measure (str, optional): Central distribution measure to use ('mean' or 'median'). Defaults to 'mean'.
+        Parameters:
+            - data (pd.DataFrame): The dataset to analyze.
+            - features (list): List of features to consider for outlier detection.
+            - neighbors_fraction (float, optional): Fraction of dataset size to use as neighbors. Defaults to 0.1.
+            - contamination (str, optional): Method for calculating contamination ('auto', '3std'). Defaults to 'auto'.
+            - center_measure (str, optional): Central distribution measure to use ('mean' or 'median'). Defaults to 'mean'.
 
         Returns:
             pd.DataFrame: DataFrame of outliers.
@@ -261,10 +261,10 @@ class Anomalies:
     def linear_outliers_influencers(cls,data:pd.DataFrame ,features:list, center_measure='mean'):
         """This function align for linear datasets to explore outliers using Cook's D (distance based evaluation). A Cook’s result > 1 = Significant influence, while Cook’s D > 0.5 is worth investigating. 
 
-        Args:
-            data (pd.DataFrame): The dataset to analyze.
-            features (list): List of features to consider for outlier detection.
-            center_measure (str, optional): Central distribution measure to use ('mean' or 'median'). Defaults to 'mean'.
+        Parameters:
+            - data (pd.DataFrame): The dataset to analyze.
+            - features (list): List of features to consider for outlier detection.
+            - center_measure (str, optional): Central distribution measure to use ('mean' or 'median'). Defaults to 'mean'.
 
         Returns:
             pd.DataFrame: DataFrame of outliers.

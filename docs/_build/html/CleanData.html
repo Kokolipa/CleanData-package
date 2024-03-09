@@ -131,9 +131,11 @@
 <em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">find_date_anomalies</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">date_column</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">identify_by</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'month'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CleanData/anomalies.html#Anomalies.find_date_anomalies"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CleanData.anomalies.Anomalies.find_date_anomalies" title="Permalink to this definition">¶</a></dt>
 <dd><p>Find anomalies in date data.</p>
 <dl class="simple">
-<dt>Args:</dt><dd><p>data (pd.DataFrame): DataFrame containing date information.
-date_column (str): Name of the column containing date data.
-identify_by (str, optional): Identifier for type of anomaly to find ('month' or 'year'). Defaults to 'month'.</p>
+<dt>Parameters:</dt><dd><ul class="simple">
+<li><p>data (pd.DataFrame): DataFrame containing date information.</p></li>
+<li><p>date_column (str): Name of the column containing date data.</p></li>
+<li><p>identify_by (str, optional): Identifier for type of anomaly to find ('month' or 'year'). Defaults to 'month'.</p></li>
+</ul>
 </dd>
 <dt>Returns:</dt><dd><p>pd.DataFrame: DataFrame containing anomalies based on specified identification criteria.</p>
 </dd>
@@ -201,9 +203,11 @@ identify_by (str, optional): Identifier for type of anomaly to find ('month' or 
 <em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">linear_outliers_influencers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">features</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">center_measure</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mean'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CleanData/anomalies.html#Anomalies.linear_outliers_influencers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CleanData.anomalies.Anomalies.linear_outliers_influencers" title="Permalink to this definition">¶</a></dt>
 <dd><p>This function align for linear datasets to explore outliers using Cook's D (distance based evaluation). A Cook’s result &gt; 1 = Significant influence, while Cook’s D &gt; 0.5 is worth investigating.</p>
 <dl class="simple">
-<dt>Args:</dt><dd><p>data (pd.DataFrame): The dataset to analyze.
-features (list): List of features to consider for outlier detection.
-center_measure (str, optional): Central distribution measure to use ('mean' or 'median'). Defaults to 'mean'.</p>
+<dt>Parameters:</dt><dd><ul class="simple">
+<li><p>data (pd.DataFrame): The dataset to analyze.</p></li>
+<li><p>features (list): List of features to consider for outlier detection.</p></li>
+<li><p>center_measure (str, optional): Central distribution measure to use ('mean' or 'median'). Defaults to 'mean'.</p></li>
+</ul>
 </dd>
 <dt>Returns:</dt><dd><p>pd.DataFrame: DataFrame of outliers.</p>
 </dd>
@@ -242,11 +246,13 @@ center_measure (str, optional): Central distribution measure to use ('mean' or '
 <em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">nonlinear_outliers_influencers_knn</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">features</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">neighbors_fraction</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">contamination</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'auto'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">center_measure</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mean'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CleanData/anomalies.html#Anomalies.nonlinear_outliers_influencers_knn"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CleanData.anomalies.Anomalies.nonlinear_outliers_influencers_knn" title="Permalink to this definition">¶</a></dt>
 <dd><p>Detects outliers in a dataset based on nonlinear methods and KNN.</p>
 <dl class="simple">
-<dt>Args:</dt><dd><p>data (pd.DataFrame): The dataset to analyze.
-features (list): List of features to consider for outlier detection.
-neighbors_fraction (float, optional): Fraction of dataset size to use as neighbors. Defaults to 0.1.
-contamination (str, optional): Method for calculating contamination ('auto', '3std'). Defaults to 'auto'.
-center_measure (str, optional): Central distribution measure to use ('mean' or 'median'). Defaults to 'mean'.</p>
+<dt>Parameters:</dt><dd><ul class="simple">
+<li><p>data (pd.DataFrame): The dataset to analyze.</p></li>
+<li><p>features (list): List of features to consider for outlier detection.</p></li>
+<li><p>neighbors_fraction (float, optional): Fraction of dataset size to use as neighbors. Defaults to 0.1.</p></li>
+<li><p>contamination (str, optional): Method for calculating contamination ('auto', '3std'). Defaults to 'auto'.</p></li>
+<li><p>center_measure (str, optional): Central distribution measure to use ('mean' or 'median'). Defaults to 'mean'.</p></li>
+</ul>
 </dd>
 <dt>Returns:</dt><dd><p>pd.DataFrame: DataFrame of outliers.</p>
 </dd>
