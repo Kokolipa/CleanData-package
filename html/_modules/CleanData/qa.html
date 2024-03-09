@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html class="no-js" lang="Python">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+        <title>CleanData.qa &mdash; CleanData Documentation 1.0.0 documentation</title>
+    
+    <link rel="stylesheet" type="text/css" href="../../_static/dist/fontawesome.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/dist/theme.css" />
+            <link rel="index" title="Index" href="../../genindex.html" />
+            <link rel="search" title="Search" href="../../search.html" />
+            <link rel="top" title="CleanData Documentation 1.0.0 documentation" href="#" />
+            <link rel="up" title="Module code" href="../index.html" />
+    </head>
+<body>
+    <script type="text/javascript" src="../../_static/dist/blocking.js"></script>
+    <header class="container-fluid bg-primary">
+        <a class="btn btn-sm btn-light skip-to-content-link" href="#main">Skip to content</a>
+        <div class="container-fluid">
+            <div class="navbar navbar-expand-lg navbar-dark font-weight-bold">
+                    <a href="../../index.html"
+                        title="Wagtail"
+                        class="logo navbar-brand"
+                    >
+                        <img src="../../_static/img/wagtail-logo-new.svg" width="45" height="59" alt="Wagtail"
+                            class="logo-img"
+                        />
+                        Sphinx Wagtail Theme
+                    </a>
+                
+                
+                <button class="navbar-toggler btn btn-primary d-lg-none" type="button" data-toggle="collapse" data-target="#collapseSidebar" aria-expanded="false" aria-controls="collapseExample">
+                    <span class="navbar-toggler-icon"></span>
+                    <span class="sr-only">menu</span>
+                </button>
+            </div>
+        </div>
+    </header>
+    <div class="container-fluid">
+        <div class="row">
+            <aside class="col-12 col-lg-3 sidebar-container">
+                <div id="collapseSidebar" class="collapse sticky-top d-lg-block pt-5 pr-lg-4">
+<div id="searchbox" class="searchbox mb-6 px-1" role="search">
+    <form id="search-form" action="../../search.html" autocomplete="off" method="get" role="search">
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <div class="input-group-text border-right-0 bg-white py-3 pl-3 pr-2"><span class="fas fa-search"></span></div>
+            </div>
+            <input class="form-control py-3 pr-3 pl-1 h-100 border-left-0" type="search" name="q" placeholder="Search documentation" aria-label="Search documentation" id="searchinput" />
+        </div>
+        <input type="hidden" name="check_keywords" value="yes" />
+        <input type="hidden" name="area" value="default" />
+    </form>
+</div><div class="site-toc">
+    <nav class="toc mt-3" aria-label="Main menu">
+        <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">CleanData-package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../CleanData.html">CleanData package</a></li>
+</ul>
+</li>
+</ul>
+
+    </nav>
+    <template data-toggle-item-template>
+        <button class="btn btn-sm btn-link toctree-expand" type="button">
+            <span class="sr-only">Toggle menu contents</span>
+        </button>
+    </template>
+</div>
+                    <div class="d-lg-none border-bottom">
+                        
+                    </div>
+                </div>
+            </aside>
+            <div class="col-12 col-lg-9 pt-5">
+                <header class="row align-items-baseline">
+                    <div class="col">
+                        <nav aria-label="breadcrumb">
+    <ol class="breadcrumb m-0 p-0 bg-transparent">
+        <li class="breadcrumb-item"><a href="../../index.html">Docs</a></li>
+            <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+        <li class="breadcrumb-item active" aria-current="page">CleanData.qa</li>
+    </ol>
+</nav>
+                    </div>
+                    <div class="col-sm-12 col-lg-auto mt-3 mt-lg-3">
+                        <noscript>
+                            <p>JavaScript is required to toggle light/dark mode..</p>
+                        </noscript>
+                        <button id="wagtail-theme" class="btn btn-sm btn-light text-decoration-none" type="button">
+                            <span class="dark-only"><i class="fas fa-sun"></i> Light mode</span>
+                            <span class="light-only"><i class="fas fa-moon"></i> Dark mode</span>
+                        </button>
+    <a class="btn btn-sm btn-light text-decoration-none" href="https://github.com/wagtail/sphinx_wagtail_theme/blob/main/docs/_modules/CleanData/qa" rel="nofollow">
+        <span class="btn-icon"><span class="fab fa-github"></span></span>
+        <span class="btn-text">Edit on GitHub</span>
+    </a>
+                        
+                    </div>
+                </header>
+                <div class="row" >
+                    <div class="col-12">
+                        <hr class="w-100 my-4">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12 col-lg-9 order-last order-lg-first rst-content">
+                        <main role="main" id="main">
+    <h1>Source code for CleanData.qa</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>  <span class="c1"># noqa: F401</span>
+<span class="kn">from</span> <span class="nn">transformers</span> <span class="kn">import</span> <span class="p">(</span><span class="n">AutoModelForTableQuestionAnswering</span><span class="p">,</span>  <span class="c1"># noqa: F401</span>
+                          <span class="n">AutoTokenizer</span><span class="p">,</span> <span class="n">pipeline</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="QA"><a class="viewcode-back" href="../../CleanData.html#CleanData.qa.QA">[docs]</a><span class="k">class</span> <span class="nc">QA</span><span class="p">:</span>
+    <span class="c1"># Load model &amp; tokenizer</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="s1">&#39;google/tapas-base-finetuned-wtq&#39;</span>
+    <span class="n">tapas_model</span> <span class="o">=</span> <span class="n">AutoModelForTableQuestionAnswering</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+    <span class="n">tapas_tokenizer</span> <span class="o">=</span> <span class="n">AutoTokenizer</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+    
+    <span class="c1"># Initializing pipeline</span>
+    <span class="n">nlp</span> <span class="o">=</span> <span class="n">pipeline</span><span class="p">(</span><span class="s1">&#39;table-question-answering&#39;</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">tapas_model</span><span class="p">,</span> <span class="n">tokenizer</span><span class="o">=</span><span class="n">tapas_tokenizer</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">data</span>
+
+<div class="viewcode-block" id="QA.Ask"><a class="viewcode-back" href="../../CleanData.html#CleanData.qa.QA.Ask">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">Ask</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">query</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Asks a natural language question about a given pandas DataFrame and prints the answer.</span>
+
+<span class="sd">            This method utilizes a pre-trained TAPAS model for table-based question answering to interpret the data</span>
+<span class="sd">            in the DataFrame and provide answers to questions posed in natural language. It&#39;s designed to work with</span>
+<span class="sd">            data that can be represented in tabular form and can handle a wide range of question types, including</span>
+<span class="sd">            aggregations, comparisons, and single-row lookups.</span>
+
+<span class="sd">            Example usage:</span>
+<span class="sd">                Ask(&#39;Which city has the highest download speed?&#39;, data)</span>
+
+<span class="sd">            Parameters:</span>
+<span class="sd">                - query (str): The natural language question to be asked about the data.</span>
+<span class="sd">                - data (pd.DataFrame): The pandas DataFrame containing the data to be queried. </span>
+<span class="sd">                </span>
+<span class="sd">            Returns:</span>
+<span class="sd">                None. The answer is printed out. </span>
+<span class="sd">            </span>
+<span class="sd">            Example usage: </span>
+<span class="sd">            --------------</span>
+<span class="sd">            .. code-block:: python</span>
+
+<span class="sd">                # Import Depenencies</span>
+<span class="sd">                import CleanData</span>
+<span class="sd">                import pandas as pd</span>
+
+
+<span class="sd">                # Create a query</span>
+<span class="sd">                query = &quot;What is the highest in the hoursperweek feature in my data?&quot;</span>
+
+<span class="sd">                # Apply the Ask method on your DataFrame</span>
+<span class="sd">                CleanData.QA.Ask(query, income)</span>
+
+<span class="sd">            Note: **I am currently working to scale this method, currently can be applied on max 256 records at a time**</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Applying a string type for data</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+        
+        <span class="nb">print</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;&gt;&gt;&gt;&gt;&gt;&#39;</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">nlp</span><span class="p">({</span><span class="s1">&#39;table&#39;</span><span class="p">:</span> <span class="n">data</span><span class="p">,</span> <span class="s1">&#39;query&#39;</span><span class="p">:</span> <span class="n">query</span><span class="p">})</span>
+        <span class="n">answer</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;cells&#39;</span><span class="p">]</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">answer</span><span class="p">)</span></div></div>
+
+        
+</pre></div>
+</main>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer class="container-fluid bg-primary text-light">
+        <div class="container">
+            <div class="row">
+        <div class="col p-4">
+            
+                <nav aria-label="Footer">
+                    <ul class="nav justify-content-center mb-2">
+                        
+                            
+                            
+                            <li class="nav-item"><a class="nav-link text-light"  href="https://wagtail.org/features/">Features</a></li>
+                        
+                            
+                            
+                            <li class="nav-item"><a class="nav-link text-light"  href="https://wagtail.org/about-wagtail/"> About Wagtail</a></li>
+                        
+                            
+                            
+                            <li class="nav-item"><a class="nav-link text-light"  href="https://wagtail.org/services/"> Services</a></li>
+                        
+                            
+                            
+                            <li class="nav-item"><a class="nav-link text-light"  href="https://wagtail.org/blog/"> Blog</a></li>
+                        
+                            
+                            
+                            <li class="nav-item"><a class="nav-link text-light"  href="https://wagtail.org/packages/"> Packages</a></li>
+                        
+                            
+                            
+                            <li class="nav-item"><a class="nav-link text-light"  href="https://wagtail.org/developers/"> Developers</a></li>
+                        
+                    </ul>
+                </nav>
+            
+            <div class="text-center">
+                <p style="display: none">
+                    <a class="text-light" href="https://github.com/wagtail/sphinx_wagtail_theme" rel="nofollow" target="_blank">
+                        Wagtail Sphinx Theme 6.3.0
+                    </a>
+                </p>
+            </div>
+            <div class="text-center">
+                    &copy; Copyright 2024, Gal Beeri
+            </div>
+        </div>
+    </div>
+        </div>
+    </footer>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/dist/theme.js"></script>
+        <script type="text/javascript" src="../../_static/dist/vendor.js"></script>
+        <script type="text/javascript" src="../../_static/searchtools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script type="text/javascript">
+            document.addEventListener('DOMContentLoaded', function() { Search.loadIndex("../../searchindex.js"); });
+        </script>
+        <script type="text/javascript" id="searchindexloader"></script>
+    </body>
+</html>
