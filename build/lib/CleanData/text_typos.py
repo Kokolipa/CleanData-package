@@ -1,5 +1,6 @@
 
 # Import Dependencies
+
 import pandas as pd
 from spellchecker import SpellChecker
 
@@ -96,6 +97,8 @@ class TextTypos:
         for col in df[features].columns:
             df[col] = pd.to_numeric(df[col], errors='coerce')
         return df[col]
+    
+    
     
     
     #* (3) Method 
