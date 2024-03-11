@@ -41,7 +41,10 @@ data = (
 
 ## Modules & Functions Included
 - Memory module: Significantly reduce memory consumption to the smallest corresponding byte size of dataset with one simple function. 
-- Treat_NA mudole:
+- `memory` module:
+    - **optimise_mem**: Optimize memory usage of a DataFrame.
+
+- `Treat_NA` mudole:
     - **IdentifyNAs**:  Identify rows containing missing values in a DataFrame not taking into account MAR, MNAR, and MCAR (additional information what those are can be found [HERE](https://www.kaggle.com/code/prashant111/a-reference-guide-to-feature-engineering-methods), [and HERE](https://www.bookdown.org/rwnahhas/RMPH/mi-mechanisms.html). 
     - **complete_case_na**: Filter DataFrame to retain rows with complete case or edge case missing values.
     - **drop_complete_case_na**:  Drop rows with complete case missing values from a DataFrame.
@@ -49,22 +52,22 @@ data = (
     - **MNAR**: Missing of values is not at random (MNAR) if their being missing depends on information not recorded in the dataset (This function will drop all corresponsing NA values from the dependent variables based on the Independent variable/s). 
     - **logistic_regression_MAR_identifier**: Identify Missing at Random (MAR) cases using Logistic Regression.
 
-- find_treat_duplicates module:
+- `find_treat_duplicates` module:
     - **find_duplicates**: Idenfify duplicated values in DataFrame
     - **drop_duplicates**: Drop duplicated values in DataFrame. 
 
-- TextTypos module:
+- `TextTypos` module:
     - **strip_and_lower_strings**: Strip whitespace and convert strings to lowercase in DataFrame.
     - **object_to_numeric**: Convert specified columns from object type to numeric type.
     - **correct_word**: Correct spelling of a word (singular words in the `DataFrame`) using SpellChecker (this function consider special characters as well).
     - **correct_sentence**: Correct spelling in a sentence using SpellChecker (this function should be consider `for cases where a feature in the DataFrame contain more the singular word`).
 
-- Anomalies module:
+- `Anomalies` module:
     - **find_date_anomalies**: Find anomalies in date data (when `month` contain less then 28 days / when `year` contain less then 365 days).
     - **nonlinear_outliers_influencers_knn**: Detects outliers in a dataset based on nonlinear methods and KNN.
     - **linear_outliers_influencers**: This function align for linear datasets to explore outliers using Cook's D (distance based evaluation).
 
-- QA module 
+- `QA` module 
     - **Ask**: Asks a natural language question about a given pandas DataFrame and prints the answer.
 
 
