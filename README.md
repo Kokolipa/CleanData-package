@@ -31,7 +31,7 @@ data = (
 
 ## Table of Contents
 
-- [Modules & Functions Included](#Modules-&-Functions-Included)
+- [Modules & Functions Included](#modules-&-functions-included)
 - [Where to get it](#where-to-get-it)
 - [Dependencies](#dependencies)
 - [Installation from sources](#installation-from-sources)
