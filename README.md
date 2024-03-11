@@ -26,7 +26,6 @@ data = (
     data.pipe(CleanData.FindTreatDuplicates.drop_duplicates),
     # ... additional steps to be included in the funnel 
     )
-    )
 ```
 
 
