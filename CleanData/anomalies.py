@@ -8,6 +8,8 @@ from pyod.models.cd import CD
 from pyod.utils.data import get_outliers_inliers
 from sklearn.neighbors import LocalOutlierFactor
 
+from ._utils import get_time
+
 warnings.simplefilter(action='ignore', category=FutureWarning)
 
 
@@ -22,6 +24,7 @@ class Anomalies:
     
     #* (1) Method
     @classmethod # class method for date anomalies
+    @get_time
     def find_date_anomalies(cls, data:pd.DataFrame, date_column: str, identify_by='month'):
         """Find anomalies in date data.
 
@@ -121,6 +124,7 @@ class Anomalies:
     
     #* (2) Method
     @classmethod
+    @get_time
     def nonlinear_outliers_influencers_knn(cls, data: pd.DataFrame, features: list, neighbors_fraction: float = 0.1, contamination='auto', center_measure='mean'):
         """Detects outliers in a dataset based on nonlinear methods and KNN.
 
@@ -258,6 +262,7 @@ class Anomalies:
     
     #* (3) Method
     @classmethod
+    @get_time
     def linear_outliers_influencers(cls,data:pd.DataFrame ,features:list, center_measure='mean'):
         """This function align for linear datasets to explore outliers using Cook's D (distance based evaluation). A Cook’s result > 1 = Significant influence, while Cook’s D > 0.5 is worth investigating. 
 

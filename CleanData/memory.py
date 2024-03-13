@@ -3,6 +3,9 @@
 import numpy as np
 import pandas as pd
 
+
+from ._utils import get_time
+
 #!############################# # Memory Optimisation # ##############################
 
 class Memory:
@@ -12,6 +15,7 @@ class Memory:
     
     #* (1) Method 
     @classmethod
+    @get_time
     def optimise_mem(cls, data: pd.DataFrame, verbose=True) -> pd.DataFrame:
         """
         Optimize memory usage of a DataFrame.

@@ -60,6 +60,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../CleanData.html">CleanData package</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../../setup.html">setup module</a></li>
 </ul>
 
     </nav>
@@ -119,6 +120,8 @@
 <span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">LogisticRegression</span>
 <span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">StandardScaler</span>
 
+<span class="kn">from</span> <span class="nn">._utils</span> <span class="kn">import</span> <span class="n">get_time</span>
+
 <span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="n">action</span><span class="o">=</span><span class="s1">&#39;ignore&#39;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="ne">FutureWarning</span><span class="p">)</span>
 
 <span class="c1">#!############################# # Treating NA values subclass # ##############################</span>
@@ -130,6 +133,7 @@
     
     <span class="c1">#* (1) Method </span>
 <div class="viewcode-block" id="TreatNA.IdentifyNAs"><a class="viewcode-back" href="../../CleanData.html#CleanData.treat_na.TreatNA.IdentifyNAs">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="nd">@get_time</span>
     <span class="k">def</span> <span class="nf">IdentifyNAs</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Identify rows containing missing values in a DataFrame.</span>
 
@@ -166,6 +170,7 @@
     
     <span class="c1">#* (2) Method</span>
 <div class="viewcode-block" id="TreatNA.complete_case_na"><a class="viewcode-back" href="../../CleanData.html#CleanData.treat_na.TreatNA.complete_case_na">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="nd">@get_time</span>
     <span class="k">def</span> <span class="nf">complete_case_na</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Filter DataFrame to retain rows with complete case or edge case missing values.</span>
@@ -209,6 +214,7 @@
     
     <span class="c1">#* (3) Method </span>
 <div class="viewcode-block" id="TreatNA.drop_complete_case_na"><a class="viewcode-back" href="../../CleanData.html#CleanData.treat_na.TreatNA.drop_complete_case_na">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="nd">@get_time</span>
     <span class="k">def</span> <span class="nf">drop_complete_case_na</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Drop rows with complete case missing values from a DataFrame.</span>
@@ -268,6 +274,7 @@
     
     <span class="c1">#* (4) Method </span>
 <div class="viewcode-block" id="TreatNA.DataImpute"><a class="viewcode-back" href="../../CleanData.html#CleanData.treat_na.TreatNA.DataImpute">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="nd">@get_time</span>
     <span class="k">def</span> <span class="nf">DataImpute</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">features</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">missing_values</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">numeric_strategy</span><span class="o">=</span><span class="s1">&#39;mean&#39;</span><span class="p">,</span> <span class="n">string_strategy</span><span class="o">=</span><span class="s1">&#39;constant&#39;</span><span class="p">,</span> <span class="n">string_fill_value</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Apply univariate data imputation for numerical &amp; categorical strategies. Suitable for MCAR cases (A variable is missing completely at random (MCAR) if the probability of being missing is the same for all the observations)</span>
 
@@ -328,6 +335,7 @@
     
     <span class="c1">#* (5) Method </span>
 <div class="viewcode-block" id="TreatNA.MNAR"><a class="viewcode-back" href="../../CleanData.html#CleanData.treat_na.TreatNA.MNAR">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="nd">@get_time</span>
     <span class="k">def</span> <span class="nf">MNAR</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span> <span class="p">,</span> <span class="n">features</span><span class="p">:</span><span class="nb">list</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Missing of values is not at random (MNAR) if their being missing depends on information not recorded in the dataset. Transaction dataset = the values are missing if if we don&#39;t have transaction_number (NOTE: here we could have more the one independent variable)</span>
 <span class="sd">        NOTE: **Independent = transaction_number; **dependent (in their occurance): the rest of the variables</span>
@@ -371,6 +379,7 @@
     
     <span class="c1">#* (6) Method</span>
 <div class="viewcode-block" id="TreatNA.logistic_regression_MAR_identifier"><a class="viewcode-back" href="../../CleanData.html#CleanData.treat_na.TreatNA.logistic_regression_MAR_identifier">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="nd">@get_time</span>
     <span class="k">def</span> <span class="nf">logistic_regression_MAR_identifier</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span><span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Identify Missing at Random (MAR) cases using Logistic Regression.</span>
 

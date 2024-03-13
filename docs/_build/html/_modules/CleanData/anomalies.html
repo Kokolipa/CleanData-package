@@ -60,6 +60,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../CleanData.html">CleanData package</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../../setup.html">setup module</a></li>
 </ul>
 
     </nav>
@@ -119,6 +120,8 @@
 <span class="kn">from</span> <span class="nn">pyod.utils.data</span> <span class="kn">import</span> <span class="n">get_outliers_inliers</span>
 <span class="kn">from</span> <span class="nn">sklearn.neighbors</span> <span class="kn">import</span> <span class="n">LocalOutlierFactor</span>
 
+<span class="kn">from</span> <span class="nn">._utils</span> <span class="kn">import</span> <span class="n">get_time</span>
+
 <span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="n">action</span><span class="o">=</span><span class="s1">&#39;ignore&#39;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="ne">FutureWarning</span><span class="p">)</span>
 
 
@@ -133,6 +136,7 @@
     
     <span class="c1">#* (1) Method</span>
 <div class="viewcode-block" id="Anomalies.find_date_anomalies"><a class="viewcode-back" href="../../CleanData.html#CleanData.anomalies.Anomalies.find_date_anomalies">[docs]</a>    <span class="nd">@classmethod</span> <span class="c1"># class method for date anomalies</span>
+    <span class="nd">@get_time</span>
     <span class="k">def</span> <span class="nf">find_date_anomalies</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">date_column</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">identify_by</span><span class="o">=</span><span class="s1">&#39;month&#39;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Find anomalies in date data.</span>
 
@@ -232,6 +236,7 @@
     
     <span class="c1">#* (2) Method</span>
 <div class="viewcode-block" id="Anomalies.nonlinear_outliers_influencers_knn"><a class="viewcode-back" href="../../CleanData.html#CleanData.anomalies.Anomalies.nonlinear_outliers_influencers_knn">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="nd">@get_time</span>
     <span class="k">def</span> <span class="nf">nonlinear_outliers_influencers_knn</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">features</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">neighbors_fraction</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">,</span> <span class="n">contamination</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">,</span> <span class="n">center_measure</span><span class="o">=</span><span class="s1">&#39;mean&#39;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Detects outliers in a dataset based on nonlinear methods and KNN.</span>
 
@@ -369,6 +374,7 @@
     
     <span class="c1">#* (3) Method</span>
 <div class="viewcode-block" id="Anomalies.linear_outliers_influencers"><a class="viewcode-back" href="../../CleanData.html#CleanData.anomalies.Anomalies.linear_outliers_influencers">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="nd">@get_time</span>
     <span class="k">def</span> <span class="nf">linear_outliers_influencers</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span><span class="n">data</span><span class="p">:</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span> <span class="p">,</span><span class="n">features</span><span class="p">:</span><span class="nb">list</span><span class="p">,</span> <span class="n">center_measure</span><span class="o">=</span><span class="s1">&#39;mean&#39;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;This function align for linear datasets to explore outliers using Cook&#39;s D (distance based evaluation). A Cook’s result &gt; 1 = Significant influence, while Cook’s D &gt; 0.5 is worth investigating. </span>
 

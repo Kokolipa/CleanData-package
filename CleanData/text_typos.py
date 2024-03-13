@@ -1,10 +1,10 @@
 
 # Import Dependencies
-
 import pandas as pd
 from spellchecker import SpellChecker
 
-#!############################# # Find & Treat Text Typos # ##############################
+from ._utils import get_time
+
 
 class TextTypos:
     def __init__(self, data: pd.DataFrame):
@@ -12,6 +12,7 @@ class TextTypos:
     
     #* (1) Method
     @classmethod
+    @get_time
     def strip_and_lower_strings(cls, data: pd.DataFrame) -> pd.DataFrame: 
         """
         Strip whitespace and convert strings to lowercase in DataFrame.
@@ -61,6 +62,7 @@ class TextTypos:
     
     #* (2) Method 
     @classmethod
+    @get_time
     def object_to_numeric(cls,df:pd.DataFrame, features: list) -> pd.DataFrame:
         """
         Convert specified columns from object type to numeric type.
@@ -103,11 +105,13 @@ class TextTypos:
     
     #* (3) Method 
     @classmethod
-    def correct_word(cls, word: str) -> str:
+    @get_time
+    def correct_word(cls, df: pd.DataFrame, column: str) -> pd.DataFrame: 
         """Correct spelling of a word using SpellChecker.
 
         Parameters:
-            - word (str): Input word to be corrected.
+            - df (pd.DataFrame): A pandas DataFrame.
+            - Column (str): Input word to be corrected.
 
         Returns:
             str: Corrected version of the input word.
@@ -159,22 +163,25 @@ class TextTypos:
             occupation_df = occupation_df.sample(frac=1)
 
             # Apply correction to the entire dataframe
-            corrected_df = occupation_df.applymap(CleanData.text_typos.TextTypos.correct_word)
+            corrected_df = CleanData.correct_word(occupation_df, 'Occupation')
 
             corrected_df
 
         """    
         spell = SpellChecker()
-        return spell.correction(word)
+        correct_words = [spell.correction(word) for word in df[column].values]
+        return pd.DataFrame(correct_words, columns=[column])
     
     
     #* (4) Method 
     @classmethod
-    def correct_sentence(cls, strings:str) -> str:
+    @get_time
+    def correct_sentence(cls, df: pd.DataFrame, column: str) -> pd.DataFrame:
         """Correct spelling in a sentence using SpellChecker.
 
         Parameters:
-            - strings (str): Input sentence to be corrected.
+            - df (pd.DataFrame): A pandas DataFrame.
+            - Column (str): Input sentence to be corrected.
 
         Returns:
             str: Corrected version of the input sentence.
@@ -206,11 +213,25 @@ class TextTypos:
             # Create DataFrame
             occupation_df_eval = pd.DataFrame(data)
 
-            # Correct the text typos
-            occupation_df_eval['Text'] = occupation_df_eval['Text'].apply(CleanData.text_typos.TextTypos.correct_sentence)
+           # Correct the text typos
+            corrected_df = CleanData.TextTypos.correct_sentence(occupation_df_eval, 'Text')
 
-            occupation_df_eval
+            corrected_df
         """     
-        words = strings.split(' ')  # Split the string into words
-        corrected_words = [cls.correct_word(word) for word in words]  # Apply correction to each word
-        return ' '.join(corrected_words)  
+        # Create a SpellChecker object outside the loop
+        spell = SpellChecker()
+
+        # List to hold corrected sentences
+        corrected_sentences = []
+
+        # Iterate over each value in the DataFrame column
+        for sentence in df[column].str.split(' '):
+            # Use map to apply spell.correction to each word in the list
+            corrected_words = map(spell.correction, sentence)
+            # Join the corrected words to form a corrected sentence
+            corrected_sentence = ' '.join(corrected_words)
+            # Append the corrected sentence to the list
+            corrected_sentences.append(corrected_sentence)
+
+        # Create a DataFrame from the list of corrected sentences
+        return pd.DataFrame(corrected_sentences, columns=[column])

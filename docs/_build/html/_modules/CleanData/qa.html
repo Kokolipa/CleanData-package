@@ -60,6 +60,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../CleanData.html">CleanData package</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../../setup.html">setup module</a></li>
 </ul>
 
     </nav>
@@ -113,9 +114,12 @@
 <span class="kn">from</span> <span class="nn">transformers</span> <span class="kn">import</span> <span class="p">(</span><span class="n">AutoModelForTableQuestionAnswering</span><span class="p">,</span>  <span class="c1"># noqa: F401</span>
                           <span class="n">AutoTokenizer</span><span class="p">,</span> <span class="n">pipeline</span><span class="p">)</span>
 
+<span class="kn">from</span> <span class="nn">._utils</span> <span class="kn">import</span> <span class="n">get_time</span>
+
 
 <div class="viewcode-block" id="QA"><a class="viewcode-back" href="../../CleanData.html#CleanData.qa.QA">[docs]</a><span class="k">class</span> <span class="nc">QA</span><span class="p">:</span>
     <span class="c1"># Load model &amp; tokenizer</span>
+
     <span class="n">model</span> <span class="o">=</span> <span class="s1">&#39;google/tapas-base-finetuned-wtq&#39;</span>
     <span class="n">tapas_model</span> <span class="o">=</span> <span class="n">AutoModelForTableQuestionAnswering</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
     <span class="n">tapas_tokenizer</span> <span class="o">=</span> <span class="n">AutoTokenizer</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
@@ -127,6 +131,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">data</span>
 
 <div class="viewcode-block" id="QA.Ask"><a class="viewcode-back" href="../../CleanData.html#CleanData.qa.QA.Ask">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="nd">@get_time</span>
     <span class="k">def</span> <span class="nf">Ask</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">query</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">            Asks a natural language question about a given pandas DataFrame and prints the answer.</span>

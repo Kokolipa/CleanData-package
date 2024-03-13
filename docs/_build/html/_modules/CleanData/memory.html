@@ -60,6 +60,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../CleanData.html">CleanData package</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../../setup.html">setup module</a></li>
 </ul>
 
     </nav>
@@ -114,6 +115,9 @@
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
+
+<span class="kn">from</span> <span class="nn">._utils</span> <span class="kn">import</span> <span class="n">get_time</span>
+
 <span class="c1">#!############################# # Memory Optimisation # ##############################</span>
 
 <div class="viewcode-block" id="Memory"><a class="viewcode-back" href="../../CleanData.html#CleanData.memory.Memory">[docs]</a><span class="k">class</span> <span class="nc">Memory</span><span class="p">:</span>
@@ -123,6 +127,7 @@
     
     <span class="c1">#* (1) Method </span>
 <div class="viewcode-block" id="Memory.optimise_mem"><a class="viewcode-back" href="../../CleanData.html#CleanData.memory.Memory.optimise_mem">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="nd">@get_time</span>
     <span class="k">def</span> <span class="nf">optimise_mem</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Optimize memory usage of a DataFrame.</span>

@@ -8,6 +8,8 @@ from sklearn.impute import SimpleImputer
 from sklearn.linear_model import LogisticRegression
 from sklearn.preprocessing import StandardScaler
 
+from ._utils import get_time
+
 warnings.simplefilter(action='ignore', category=FutureWarning)
 
 #!############################# # Treating NA values subclass # ##############################
@@ -19,6 +21,7 @@ class TreatNA:
     
     #* (1) Method 
     @classmethod
+    @get_time
     def IdentifyNAs(cls, data: pd.DataFrame) -> pd.DataFrame:
         """Identify rows containing missing values in a DataFrame.
 
@@ -55,6 +58,7 @@ class TreatNA:
     
     #* (2) Method
     @classmethod
+    @get_time
     def complete_case_na(cls, data: pd.DataFrame) -> pd.DataFrame:
         """
         Filter DataFrame to retain rows with complete case or edge case missing values.
@@ -98,6 +102,7 @@ class TreatNA:
     
     #* (3) Method 
     @classmethod
+    @get_time
     def drop_complete_case_na(cls, data: pd.DataFrame) -> pd.DataFrame:
         """
         Drop rows with complete case missing values from a DataFrame.
@@ -157,6 +162,7 @@ class TreatNA:
     
     #* (4) Method 
     @classmethod
+    @get_time
     def DataImpute(cls, data: pd.DataFrame, features: list, missing_values=np.nan, numeric_strategy='mean', string_strategy='constant', string_fill_value=None):
         """Apply univariate data imputation for numerical & categorical strategies. Suitable for MCAR cases (A variable is missing completely at random (MCAR) if the probability of being missing is the same for all the observations)
 
@@ -217,6 +223,7 @@ class TreatNA:
     
     #* (5) Method 
     @classmethod
+    @get_time
     def MNAR(cls, data:pd.DataFrame , features:list) -> pd.DataFrame:
         """Missing of values is not at random (MNAR) if their being missing depends on information not recorded in the dataset. Transaction dataset = the values are missing if if we don't have transaction_number (NOTE: here we could have more the one independent variable)
         NOTE: **Independent = transaction_number; **dependent (in their occurance): the rest of the variables
@@ -260,6 +267,7 @@ class TreatNA:
     
     #* (6) Method
     @classmethod
+    @get_time
     def logistic_regression_MAR_identifier(cls,df: pd.DataFrame, max_iter=1000) -> pd.DataFrame:
         """Identify Missing at Random (MAR) cases using Logistic Regression.
 

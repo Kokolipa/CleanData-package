@@ -114,7 +114,8 @@
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">from</span> <span class="nn">spellchecker</span> <span class="kn">import</span> <span class="n">SpellChecker</span>
 
-<span class="c1">#!############################# # Find &amp; Treat Text Typos # ##############################</span>
+<span class="kn">from</span> <span class="nn">._utils</span> <span class="kn">import</span> <span class="n">get_time</span>
+
 
 <div class="viewcode-block" id="TextTypos"><a class="viewcode-back" href="../../CleanData.html#CleanData.text_typos.TextTypos">[docs]</a><span class="k">class</span> <span class="nc">TextTypos</span><span class="p">:</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
@@ -122,6 +123,7 @@
     
     <span class="c1">#* (1) Method</span>
 <div class="viewcode-block" id="TextTypos.strip_and_lower_strings"><a class="viewcode-back" href="../../CleanData.html#CleanData.text_typos.TextTypos.strip_and_lower_strings">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="nd">@get_time</span>
     <span class="k">def</span> <span class="nf">strip_and_lower_strings</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span> 
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Strip whitespace and convert strings to lowercase in DataFrame.</span>
@@ -171,6 +173,7 @@
     
     <span class="c1">#* (2) Method </span>
 <div class="viewcode-block" id="TextTypos.object_to_numeric"><a class="viewcode-back" href="../../CleanData.html#CleanData.text_typos.TextTypos.object_to_numeric">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="nd">@get_time</span>
     <span class="k">def</span> <span class="nf">object_to_numeric</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span><span class="n">df</span><span class="p">:</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">features</span><span class="p">:</span> <span class="nb">list</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Convert specified columns from object type to numeric type.</span>
@@ -209,13 +212,17 @@
         <span class="k">return</span> <span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span></div>
     
     
+    
+    
     <span class="c1">#* (3) Method </span>
 <div class="viewcode-block" id="TextTypos.correct_word"><a class="viewcode-back" href="../../CleanData.html#CleanData.text_typos.TextTypos.correct_word">[docs]</a>    <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">correct_word</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">word</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="nd">@get_time</span>
+    <span class="k">def</span> <span class="nf">correct_word</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">column</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span> 
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Correct spelling of a word using SpellChecker.</span>
 
 <span class="sd">        Parameters:</span>
-<span class="sd">            - word (str): Input word to be corrected.</span>
+<span class="sd">            - df (pd.DataFrame): A pandas DataFrame.</span>
+<span class="sd">            - Column (str): Input word to be corrected.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            str: Corrected version of the input word.</span>
@@ -267,22 +274,25 @@
 <span class="sd">            occupation_df = occupation_df.sample(frac=1)</span>
 
 <span class="sd">            # Apply correction to the entire dataframe</span>
-<span class="sd">            corrected_df = occupation_df.applymap(CleanData.text_typos.TextTypos.correct_word)</span>
+<span class="sd">            corrected_df = CleanData.correct_word(occupation_df, &#39;Occupation&#39;)</span>
 
 <span class="sd">            corrected_df</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>    
         <span class="n">spell</span> <span class="o">=</span> <span class="n">SpellChecker</span><span class="p">()</span>
-        <span class="k">return</span> <span class="n">spell</span><span class="o">.</span><span class="n">correction</span><span class="p">(</span><span class="n">word</span><span class="p">)</span></div>
+        <span class="n">correct_words</span> <span class="o">=</span> <span class="p">[</span><span class="n">spell</span><span class="o">.</span><span class="n">correction</span><span class="p">(</span><span class="n">word</span><span class="p">)</span> <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">df</span><span class="p">[</span><span class="n">column</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">correct_words</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="n">column</span><span class="p">])</span></div>
     
     
     <span class="c1">#* (4) Method </span>
 <div class="viewcode-block" id="TextTypos.correct_sentence"><a class="viewcode-back" href="../../CleanData.html#CleanData.text_typos.TextTypos.correct_sentence">[docs]</a>    <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">correct_sentence</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">strings</span><span class="p">:</span><span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="nd">@get_time</span>
+    <span class="k">def</span> <span class="nf">correct_sentence</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">column</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Correct spelling in a sentence using SpellChecker.</span>
 
 <span class="sd">        Parameters:</span>
-<span class="sd">            - strings (str): Input sentence to be corrected.</span>
+<span class="sd">            - df (pd.DataFrame): A pandas DataFrame.</span>
+<span class="sd">            - Column (str): Input sentence to be corrected.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            str: Corrected version of the input sentence.</span>
@@ -314,14 +324,28 @@
 <span class="sd">            # Create DataFrame</span>
 <span class="sd">            occupation_df_eval = pd.DataFrame(data)</span>
 
-<span class="sd">            # Correct the text typos</span>
-<span class="sd">            occupation_df_eval[&#39;Text&#39;] = occupation_df_eval[&#39;Text&#39;].apply(CleanData.text_typos.TextTypos.correct_sentence)</span>
+<span class="sd">           # Correct the text typos</span>
+<span class="sd">            corrected_df = CleanData.TextTypos.correct_sentence(occupation_df_eval, &#39;Text&#39;)</span>
 
-<span class="sd">            occupation_df_eval</span>
+<span class="sd">            corrected_df</span>
 <span class="sd">        &quot;&quot;&quot;</span>     
-        <span class="n">words</span> <span class="o">=</span> <span class="n">strings</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span>  <span class="c1"># Split the string into words</span>
-        <span class="n">corrected_words</span> <span class="o">=</span> <span class="p">[</span><span class="bp">cls</span><span class="o">.</span><span class="n">correct_word</span><span class="p">(</span><span class="n">word</span><span class="p">)</span> <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">words</span><span class="p">]</span>  <span class="c1"># Apply correction to each word</span>
-        <span class="k">return</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">corrected_words</span><span class="p">)</span>  </div></div>
+        <span class="c1"># Create a SpellChecker object outside the loop</span>
+        <span class="n">spell</span> <span class="o">=</span> <span class="n">SpellChecker</span><span class="p">()</span>
+
+        <span class="c1"># List to hold corrected sentences</span>
+        <span class="n">corrected_sentences</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c1"># Iterate over each value in the DataFrame column</span>
+        <span class="k">for</span> <span class="n">sentence</span> <span class="ow">in</span> <span class="n">df</span><span class="p">[</span><span class="n">column</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">):</span>
+            <span class="c1"># Use map to apply spell.correction to each word in the list</span>
+            <span class="n">corrected_words</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="n">spell</span><span class="o">.</span><span class="n">correction</span><span class="p">,</span> <span class="n">sentence</span><span class="p">)</span>
+            <span class="c1"># Join the corrected words to form a corrected sentence</span>
+            <span class="n">corrected_sentence</span> <span class="o">=</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">corrected_words</span><span class="p">)</span>
+            <span class="c1"># Append the corrected sentence to the list</span>
+            <span class="n">corrected_sentences</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">corrected_sentence</span><span class="p">)</span>
+
+        <span class="c1"># Create a DataFrame from the list of corrected sentences</span>
+        <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">corrected_sentences</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="n">column</span><span class="p">])</span></div></div>
 </pre></div>
 </main>
                         

@@ -2,9 +2,12 @@ import pandas as pd  # noqa: F401
 from transformers import (AutoModelForTableQuestionAnswering,  # noqa: F401
                           AutoTokenizer, pipeline)
 
+from ._utils import get_time
+
 
 class QA:
     # Load model & tokenizer
+
     model = 'google/tapas-base-finetuned-wtq'
     tapas_model = AutoModelForTableQuestionAnswering.from_pretrained(model)
     tapas_tokenizer = AutoTokenizer.from_pretrained(model)
@@ -16,6 +19,7 @@ class QA:
         self.data = data
 
     @classmethod
+    @get_time
     def Ask(cls, query: str, data: pd.DataFrame):
         """
             Asks a natural language question about a given pandas DataFrame and prints the answer.

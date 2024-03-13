@@ -2,6 +2,7 @@ LICENSE
 README.md
 setup.py
 CleanData/__init__.py
+CleanData/_utils.py
 CleanData/anomalies.py
 CleanData/find_treat_duplicates.py
 CleanData/memory.py

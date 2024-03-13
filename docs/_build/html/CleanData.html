@@ -505,54 +505,56 @@ aggregations, comparisons, and single-row lookups.</p>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="CleanData.text_typos.TextTypos.correct_sentence">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">correct_sentence</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">strings</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/CleanData/text_typos.html#TextTypos.correct_sentence"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CleanData.text_typos.TextTypos.correct_sentence" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">correct_sentence</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">column</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="reference internal" href="_modules/CleanData/text_typos.html#TextTypos.correct_sentence"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CleanData.text_typos.TextTypos.correct_sentence" title="Permalink to this definition">¶</a></dt>
 <dd><p>Correct spelling in a sentence using SpellChecker.</p>
 <dl class="simple">
 <dt>Parameters:</dt><dd><ul class="simple">
-<li><p>strings (str): Input sentence to be corrected.</p></li>
+<li><p>df (pd.DataFrame): A pandas DataFrame.</p></li>
+<li><p>Column (str): Input sentence to be corrected.</p></li>
 </ul>
 </dd>
 <dt>Returns:</dt><dd><p>str: Corrected version of the input sentence.</p>
 </dd>
 </dl>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import dependencies</span>
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="kn">import</span> <span class="nn">CleanData</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span> <span class="c1"># Import dependencies</span>
+ <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+ <span class="kn">import</span> <span class="nn">CleanData</span>
 
-<span class="c1"># sample data</span>
-<span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s1">&#39;Text&#39;</span><span class="p">:</span> <span class="p">[</span>
-        <span class="s2">&quot;The brown fox jumps over the lazy dog.&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;She is an engeneer and work in a tech company.&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;I&#39;m goign to the beech this weekend.&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;His favorit! color is purpel.&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;The concert was amazig, I reccomend it to everyone.&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;The resturant was ful of delicius food.&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;I have an appoitment with the docter tomorrow.&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;The weathr is nice today, let&#39;s go for a picnick.&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;I&#39;m intersted in biologgy and study it at the univeristy.&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;He&#39;s a talanted musitian and plays the gitar very well.&quot;</span>
-    <span class="p">]</span>
-<span class="p">}</span>
+ <span class="c1"># sample data</span>
+ <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+     <span class="s1">&#39;Text&#39;</span><span class="p">:</span> <span class="p">[</span>
+         <span class="s2">&quot;The brown fox jumps over the lazy dog.&quot;</span><span class="p">,</span>
+         <span class="s2">&quot;She is an engeneer and work in a tech company.&quot;</span><span class="p">,</span>
+         <span class="s2">&quot;I&#39;m goign to the beech this weekend.&quot;</span><span class="p">,</span>
+         <span class="s2">&quot;His favorit! color is purpel.&quot;</span><span class="p">,</span>
+         <span class="s2">&quot;The concert was amazig, I reccomend it to everyone.&quot;</span><span class="p">,</span>
+         <span class="s2">&quot;The resturant was ful of delicius food.&quot;</span><span class="p">,</span>
+         <span class="s2">&quot;I have an appoitment with the docter tomorrow.&quot;</span><span class="p">,</span>
+         <span class="s2">&quot;The weathr is nice today, let&#39;s go for a picnick.&quot;</span><span class="p">,</span>
+         <span class="s2">&quot;I&#39;m intersted in biologgy and study it at the univeristy.&quot;</span><span class="p">,</span>
+         <span class="s2">&quot;He&#39;s a talanted musitian and plays the gitar very well.&quot;</span>
+     <span class="p">]</span>
+ <span class="p">}</span>
 
-<span class="c1"># Create DataFrame</span>
-<span class="n">occupation_df_eval</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+ <span class="c1"># Create DataFrame</span>
+ <span class="n">occupation_df_eval</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 
 <span class="c1"># Correct the text typos</span>
-<span class="n">occupation_df_eval</span><span class="p">[</span><span class="s1">&#39;Text&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">occupation_df_eval</span><span class="p">[</span><span class="s1">&#39;Text&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">CleanData</span><span class="o">.</span><span class="n">text_typos</span><span class="o">.</span><span class="n">TextTypos</span><span class="o">.</span><span class="n">correct_sentence</span><span class="p">)</span>
+ <span class="n">corrected_df</span> <span class="o">=</span> <span class="n">CleanData</span><span class="o">.</span><span class="n">TextTypos</span><span class="o">.</span><span class="n">correct_sentence</span><span class="p">(</span><span class="n">occupation_df_eval</span><span class="p">,</span> <span class="s1">&#39;Text&#39;</span><span class="p">)</span>
 
-<span class="n">occupation_df_eval</span>
+ <span class="n">corrected_df</span>
 </pre></div>
 </div>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="CleanData.text_typos.TextTypos.correct_word">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">correct_word</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">word</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/CleanData/text_typos.html#TextTypos.correct_word"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CleanData.text_typos.TextTypos.correct_word" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">correct_word</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">column</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="reference internal" href="_modules/CleanData/text_typos.html#TextTypos.correct_word"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CleanData.text_typos.TextTypos.correct_word" title="Permalink to this definition">¶</a></dt>
 <dd><p>Correct spelling of a word using SpellChecker.</p>
 <dl class="simple">
 <dt>Parameters:</dt><dd><ul class="simple">
-<li><p>word (str): Input word to be corrected.</p></li>
+<li><p>df (pd.DataFrame): A pandas DataFrame.</p></li>
+<li><p>Column (str): Input word to be corrected.</p></li>
 </ul>
 </dd>
 <dt>Returns:</dt><dd><p>str: Corrected version of the input word.</p>
@@ -601,7 +603,7 @@ aggregations, comparisons, and single-row lookups.</p>
 <span class="n">occupation_df</span> <span class="o">=</span> <span class="n">occupation_df</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">frac</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
 <span class="c1"># Apply correction to the entire dataframe</span>
-<span class="n">corrected_df</span> <span class="o">=</span> <span class="n">occupation_df</span><span class="o">.</span><span class="n">applymap</span><span class="p">(</span><span class="n">CleanData</span><span class="o">.</span><span class="n">text_typos</span><span class="o">.</span><span class="n">TextTypos</span><span class="o">.</span><span class="n">correct_word</span><span class="p">)</span>
+<span class="n">corrected_df</span> <span class="o">=</span> <span class="n">CleanData</span><span class="o">.</span><span class="n">correct_word</span><span class="p">(</span><span class="n">occupation_df</span><span class="p">,</span> <span class="s1">&#39;Occupation&#39;</span><span class="p">)</span>
 
 <span class="n">corrected_df</span>
 </pre></div>

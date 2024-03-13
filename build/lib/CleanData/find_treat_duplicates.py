@@ -1,6 +1,9 @@
 # Import Dependencies
 import pandas as pd
 
+
+from ._utils import get_time
+
 #!############################# # Treat Duplicated Values Class # ##############################
 
 class FindTreatDuplicates:
@@ -10,6 +13,7 @@ class FindTreatDuplicates:
     
     #* (1) Method 
     @classmethod
+    @get_time
     def find_duplicates(cls, data: pd.DataFrame, subset=None, identify_all=False) -> pd.DataFrame:
         """Idenfify duplicated values in DataFrame. 
 
@@ -58,6 +62,7 @@ class FindTreatDuplicates:
     
     #* (2) Method 
     @classmethod
+    @get_time
     def drop_duplicates(cls, data: pd.DataFrame, subset=None, identify_all='first') -> pd.DataFrame:
         """Drop duplicated values in DataFrame. 
 
